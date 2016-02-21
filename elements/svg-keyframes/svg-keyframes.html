@@ -1,0 +1,360 @@
+<!--
+Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
+-->
+<dom-module id="svg-keyframe">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+        width: 300px;
+        position: relative;
+        background-color: #434343;
+        background-image:linear-gradient(#434343, #282828);
+      }
+      .grid-background{
+        background-color: transparent;
+        background-image: 
+          linear-gradient(0deg, transparent 24%, 
+            rgba(255, 255, 255, .2) 25%, 
+            rgba(255, 255, 255, .2) 26%, 
+            transparent 27%, 
+            transparent 74%, 
+            rgba(255, 255, 255, .2) 75%, 
+            rgba(255, 255, 255, .2) 76%, 
+            transparent 77%, 
+            transparent), 
+          linear-gradient(90deg, 
+            transparent 24%, 
+            rgba(255, 255, 255, .2) 25%, 
+            rgba(255, 255, 255, .2) 26%, 
+            transparent 27%, 
+            transparent 74%, 
+            rgba(255, 255, 255, .2) 75%, 
+            rgba(255, 255, 255, .2) 76%, 
+            transparent 77%, 
+            transparent);
+        height:100%;
+        background-size:25px 25px;
+      }
+      .svg-display {
+        position: relative;
+        height: 150px;
+        width: 100px;
+      }
+      .svg-collection {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      .element-container: {
+        width: 400px;
+        display: block;
+      }
+      paper-toolbar {
+        --paper-toolbar-background: rgba(0,0,0,0.3);
+        --paper-toolbar-title: {
+          margin-left: 0px;
+          font-size: 15px;
+        }
+      }
+      .main-container {
+        @apply(--layout-horizontal);
+        @apply(--layout-wrap);
+      }
+      .svg-properties {
+        @apply(--layout-flex);
+        height: 150px;
+        overflow-y: scroll;
+      }
+      .svg-property {
+        display: block;
+        color: aliceblue;
+        text-transform: lowercase;
+        text-align: left;
+        background: rgba(255,255,255, 0.1);
+        padding: 10px;
+        margin: 2px;
+      }
+      .svg-property paper-icon-button {
+        position: absolute;
+        top: 0;
+        right: 5px;
+      }
+      .add-property-section {
+        padding: 10px;
+        background: rgba(255,255,255, 0.6);
+      }
+      .add-property-input {
+        @apply(--layout-horizontal);
+        @apply(--layout-wrap);
+      }
+      .width-50 {
+        width: 45%;
+        margin-right: 10px;
+      }
+      .width-30 {
+        width: 30%;
+        margin-right: 5px;
+      }
+      .width-100 {
+        width: 100%;
+      }
+      paper-checkbox {
+        padding: 30px 0 10px;
+        --paper-checkbox-unchecked-color: #737373;
+        --paper-checkbox-label-color : #737373;
+        --paper-checkbox-checked-color: black;
+      }
+      paper-input {
+        --paper-input-underline-focus: {
+          color: black;
+        }
+      }
+      .display-property-button {
+        padding: 0;
+        text-align: center;
+      }
+      .add-property-input-section {
+        display: none;
+        transition: height 1s;
+        -webkit-transition: height 1s;
+      }
+      .add-property-button {
+        margin-top: 40px;
+        background: rgba(255,255,255, 0.6);
+      }
+    </style>
+    <paper-material class="element-container" elevation="1">
+      <paper-toolbar>
+        <div class="title">
+          @keyframe <span>{{keyframeName}}</span>
+        </div>
+      </paper-toolbar>
+      <div class="main-container">
+        <div class="svg-display grid-background" id="svgdisplay">
+          <template is="dom-repeat" items="{{svgCollection}}">
+            <svg class="svg-collection" height="100%" width="100%" fill="none">
+              <path d$="{{item.path}}" 
+                    stroke$="{{item.strokeColor}}" 
+                    stroke-width="2" 
+                    selectedprop$="{{item.property}}" 
+                    selectedunit$="{{item.unit}}" 
+                    selectedmaxvalue$="{{item.maxValue}}" />
+            </svg>
+          </template>
+        </div>
+        <div class="svg-properties">
+          <template is="dom-repeat" items="{{svgCollection}}">
+            <paper-material 
+                class="svg-property"
+                elevation="1" 
+                style$="border-left: 2px solid {{item.strokeColor}};">
+              <span>{{item.property}}</span>
+              <paper-icon-button
+                 icon="icons:clear"
+                 on-click=handlePropertyDelete></paper-icon-button>
+            </paper-material>
+          </template>
+        </div>
+      </div>
+      <div class="add-property-section">
+        <paper-button
+                 toggles
+                 noink
+                 class="display-property-button width-100"
+                 on-click="handleDisplayPropertyInput">
+          +
+        </paper-button>
+        <div class="add-property-input-section">
+          <div class="add-property-input">
+            <paper-input label="SVG path" class="width-100" id="path"></paper-input>
+            <paper-input label="property name" class="width-50" id="property"></paper-input>
+            <paper-checkbox  class="width-50" id="is10">1's and 0's</paper-checkbox>
+            <paper-input label="unit"  class="width-30" id="unit"></paper-input>
+            <paper-input label="min value"  class="width-30" id="min"></paper-input>
+            <paper-input label="max value" class="width-30" id="max"></paper-input>
+            <paper-button 
+              raised
+              class="width-100 add-property-button"
+              on-click="handleAddProperty">
+              Add Property
+            </paper-button>
+          </div>
+        </div>
+      </div>
+    </paper-material>
+  </template>
+  <script>
+    Polymer({
+      is: 'svg-keyframe',
+      properties: {
+        svgCollection: {
+          type: Array,
+          notify: true,
+          value: [
+            {
+              path: "M0,100 C2.45434624,97.8269293 16.3464551,108.82637 36.7536484,1.51862764 C57.2239404,55.7168427 71.8396693,1.51862764 73.4575634,0.417637977 C82.7586528,14.6942143 89.6790662,2.18537229 91.391449,0 C95.988064,6.63361647 100,0 100,0",
+              property: 'bottom',
+              unit: 'px',
+              maxValue: '200'
+            }, {
+              path: "M0,100 C50,100 50,100 50,50 C50,-1.73472348e-18 50,0 100,-1.73472348e-18",
+              property: 'width',
+              unit: 'px',
+              maxValue: '200'
+            }, {
+              path: "M0,100.004963 C0,100.004963 25,147.596355 25,100.004961 C25,70.7741867 32.2461944,85.3230873 58.484375,94.8579105 C68.9280825,98.6531013 83.2611815,99.9999999 100,100",
+              property: 'left',
+              unit: 'px',
+              maxValue: '100'
+            }, {
+              path: "M0,100 C0,100 18.1450901,69.0663515 24.0949898,99.9609384 C30.0448895,130.855525 100,100 100,100",
+              property: 'opacity',
+              unit: '',
+              maxValue: '1'
+            }
+          ],
+          observer: '_svgCollectionChanged'
+        },
+        rawCss: {
+          type: Object,
+          notify: true,
+          value: {}
+        },
+        builtCss: {
+          type: String,
+          value: ''
+        },
+        keyframeName: {
+          type: String,
+          notify: true,
+          reflectToAttribute: true
+        }
+      },
+      ready: function() {
+        setTimeout(() => {
+          this._svgCollectionChanged();
+        }, 1000);
+      },
+      _svgCollectionChanged: function() {
+        this._buildStrokeColor();
+        this._getYCoordinates()
+          .then(() => {
+            return this._buildCSS();
+          })
+          .then(() => {
+            console.log(this.builtCss);
+          })
+      },
+      _getYCoordinates: function() {
+        return new Promise((resolve, reject) => {
+          var pathEl = this.$.svgdisplay.querySelectorAll('.svg-collection path');
+          for (var i = 0; i < pathEl.length; i++) {
+            this._buildRawPropertyKeyframe(pathEl[i]);
+          }
+          resolve();
+        });
+      },
+      _buildStrokeColor: function() {
+        var total = this.svgCollection.length;
+        for(var i=0; i<total; i++ ) {
+          if(!this.svgCollection[i].strokeColor) {
+            this.svgCollection[i].strokeColor = '#' +
+              this._generateRandomColor('');
+          }
+        }
+      },
+      _generateRandomColor: function(lor) {
+        return (lor += 
+          [3,4,5,6,7,8,9,'a','b','c','d','e','f'][Math.floor(Math.random()*13)])
+          && (lor.length == 6) ?  lor : this._generateRandomColor(lor);
+      },
+      _buildCSS: function() {
+        return new Promise((resolve, reject) => {
+          var css = "@keyframes " + this.keyframeName +
+            ' {\n';
+          for (var percentage in this.rawCss) {
+            css += '\t' + percentage + ' {\n';
+            for (var prop in this.rawCss[percentage]) {
+              css += '\t\t' + prop + ': ' +
+                this.rawCss[percentage][prop] +
+                ';\n'
+            }
+            css += '\t}\n';
+          }
+          css += '}\n';
+          this.builtCss = css;
+          resolve();
+        });
+      },
+      _buildRawPropertyKeyframe: function(pathEl) {
+        var pathLength = pathEl.getTotalLength(),
+          increments = pathLength / 100,
+          property = pathEl.getAttribute('selectedprop'),
+          unit = pathEl.getAttribute('selectedunit'),
+          maxValue = pathEl.getAttribute('selectedmaxvalue');
+
+        for (var start = 0; start < pathLength; start += increments) {
+          var svgPoint = pathEl.getPointAtLength(start);
+
+          if (!this.rawCss[Math.round(svgPoint.x) + '%']) {
+            this.rawCss[Math.round(svgPoint.x) + '%'] =
+              new Object();
+          }
+          if (!this.rawCss[Math.round(svgPoint.x) + '%'][property]) {
+            this.rawCss[Math.round(svgPoint.x) + '%'][property] =
+              new Object();
+          }
+          this.rawCss[Math.round(svgPoint.x) + '%'][property] =
+            (svgPoint.y * maxValue / 100) + unit;
+        }
+      },
+      handlePropertyDelete: function(event) {
+        this._removeProperty(event.model.index)
+        .then(()=>{
+          this.rawCss = {};
+          this.builtCss = '';
+          this._svgCollectionChanged();
+        });
+      },
+      _removeProperty: function(index) {
+        return new Promise((resolve, reject)=>{
+          this.splice('svgCollection', index, 1);
+          resolve();
+        });
+      },
+      handleDisplayPropertyInput: function(event) {
+        var isActive = event.target.active;
+        if (isActive) {
+          this.$$('.add-property-input-section').style.display = 'block';
+          event.target.innerText = '-'
+          return;
+        }
+        this.$$('.add-property-input-section').style.display = 'none';
+        event.target.innerText = '+'
+      },
+      handleAddProperty: function(event) {
+        
+        //console.log(this.$.min.value);
+        var newSvgObj = {
+          path: this.$.path.value,
+          property: this.$.property.value,
+          unit: this.$.unit.value || '',
+          maxValue: this.$.max.value,
+          strokeColor: '#' + this._generateRandomColor('')
+        }
+        this.push('svgCollection', newSvgObj);
+        
+        this.$.path.value = '';
+        this.$.property.value = '';
+        this.$.unit.value = '';
+        this.$.max.value = '';
+        this.$.min.value = '';
+        
+        this.$$('.display-property-button').click();
+      }
+    });
+
+  </script>
+</dom-module>
