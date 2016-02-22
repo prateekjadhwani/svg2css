@@ -13,25 +13,25 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
       }
       .grid-background{
         background-color: transparent;
-        background-image: 
-          linear-gradient(0deg, transparent 24%, 
-            rgba(255, 255, 255, .2) 25%, 
-            rgba(255, 255, 255, .2) 26%, 
-            transparent 27%, 
-            transparent 74%, 
-            rgba(255, 255, 255, .2) 75%, 
-            rgba(255, 255, 255, .2) 76%, 
-            transparent 77%, 
-            transparent), 
-          linear-gradient(90deg, 
-            transparent 24%, 
-            rgba(255, 255, 255, .2) 25%, 
-            rgba(255, 255, 255, .2) 26%, 
-            transparent 27%, 
-            transparent 74%, 
-            rgba(255, 255, 255, .2) 75%, 
-            rgba(255, 255, 255, .2) 76%, 
-            transparent 77%, 
+        background-image:
+          linear-gradient(0deg, transparent 24%,
+            rgba(255, 255, 255, .2) 25%,
+            rgba(255, 255, 255, .2) 26%,
+            transparent 27%,
+            transparent 74%,
+            rgba(255, 255, 255, .2) 75%,
+            rgba(255, 255, 255, .2) 76%,
+            transparent 77%,
+            transparent),
+          linear-gradient(90deg,
+            transparent 24%,
+            rgba(255, 255, 255, .2) 25%,
+            rgba(255, 255, 255, .2) 26%,
+            transparent 27%,
+            transparent 74%,
+            rgba(255, 255, 255, .2) 75%,
+            rgba(255, 255, 255, .2) 76%,
+            transparent 77%,
             transparent);
         height:100%;
         background-size:25px 25px;
@@ -135,20 +135,20 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
         <div class="svg-display grid-background" id="svgdisplay">
           <template is="dom-repeat" items="{{svgCollection}}">
             <svg class="svg-collection" height="100%" width="100%" fill="none">
-              <path d$="{{item.path}}" 
-                    stroke$="{{item.strokeColor}}" 
-                    stroke-width="2" 
-                    selectedprop$="{{item.property}}" 
-                    selectedunit$="{{item.unit}}" 
+              <path d$="{{item.path}}"
+                    stroke$="{{item.strokeColor}}"
+                    stroke-width="2"
+                    selectedprop$="{{item.property}}"
+                    selectedunit$="{{item.unit}}"
                     selectedmaxvalue$="{{item.maxValue}}" />
             </svg>
           </template>
         </div>
         <div class="svg-properties">
           <template is="dom-repeat" items="{{svgCollection}}">
-            <paper-material 
+            <paper-material
                 class="svg-property"
-                elevation="1" 
+                elevation="1"
                 style$="border-left: 2px solid {{item.strokeColor}};">
               <span>{{item.property}}</span>
               <paper-icon-button
@@ -174,7 +174,7 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
             <paper-input label="unit"  class="width-30" id="unit"></paper-input>
             <paper-input label="min value"  class="width-30" id="min"></paper-input>
             <paper-input label="max value" class="width-30" id="max"></paper-input>
-            <paper-button 
+            <paper-button
               raised
               class="width-100 add-property-button"
               on-click="handleAddProperty">
@@ -244,8 +244,8 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
             return this._buildCSS();
           })
           .then(() => {
-            console.log(this.builtCss);
-          })
+            //console.log(this.builtCss);
+          });
       },
       _getYCoordinates: function() {
         return new Promise((resolve, reject) => {
@@ -266,7 +266,7 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
         }
       },
       _generateRandomColor: function(lor) {
-        return (lor += 
+        return (lor +=
           [3,4,5,6,7,8,9,'a','b','c','d','e','f'][Math.floor(Math.random()*13)])
           && (lor.length == 6) ?  lor : this._generateRandomColor(lor);
       },
@@ -335,7 +335,7 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
         event.target.innerText = '+'
       },
       handleAddProperty: function(event) {
-        
+
         //console.log(this.$.min.value);
         var newSvgObj = {
           path: this.$.path.value,
@@ -345,13 +345,13 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
           strokeColor: '#' + this._generateRandomColor('')
         }
         this.push('svgCollection', newSvgObj);
-        
+
         this.$.path.value = '';
         this.$.property.value = '';
         this.$.unit.value = '';
         this.$.max.value = '';
         this.$.min.value = '';
-        
+
         this.$$('.display-property-button').click();
       }
     });
