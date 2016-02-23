@@ -1,0 +1,76 @@
+<dom-module id="main-app">
+    <template>
+        <style>
+            :host {
+
+            }
+            .main-container {
+                @apply(--layout-horizontal);
+                height: calc(100vh - 84px);
+            }
+            .live-preview-section {
+
+                width: 40%;
+                height: calc(100vh - 84px);
+            }
+            live-preview {
+                margin: 10px 0 20px 10px;
+                @apply(--layout-self-stretch);
+            }
+
+            .code-editor-section, .svg-keyframe-section {
+                @apply(--layout-vertical);
+                height: calc(100vh - 84px);
+            }
+            .code-editor-section {
+                overflow-y: hidden;
+                margin-top: 10px;
+            }
+            .svg-keyframe-section {
+                padding: 10px;
+                overflow-y: scroll;
+            }
+            .svg-keyframe-collection {
+                @apply(--layout-vertical);
+            }
+            code-editor:nth-child(2) {
+                border-top: 2px solid #434343;
+                z-index: 3;
+            }
+            svg-keyframe {
+                margin-bottom: 20px;
+            }
+        </style>
+        <paper-toolbar>
+            <div class="title">
+              SVG2CSS
+            </div>
+        </paper-toolbar>
+        <div class="main-container">
+            <div class="live-preview-section">
+                <live-preview class="horizontal layout"></live-preview>
+            </div>
+
+            <div class="code-editor-section">
+                <code-editor mode="css"></code-editor>
+                <code-editor mode="xml"></code-editor>
+            </div>
+            <div class="svg-keyframe-section">
+                <div class="svg-keyframe-collection">
+                    <svg-keyframe keyframe-name="dropball"></svg-keyframe>
+                    <svg-keyframe keyframe-name="moveout"></svg-keyframe>
+                </div>
+                <paper-button raised>Add More Keyframe</paper-button>
+            </div>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            is: 'main-app',
+            ready: function() {
+                console.log('app ready to use');
+            }
+        });
+    </script>
+</dom-module>
+

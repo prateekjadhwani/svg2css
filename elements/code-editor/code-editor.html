@@ -1,0 +1,68 @@
+<link rel="import" href="code-mirror/code-mirror.html" />
+
+<dom-module id="code-editor">
+    <template>
+        <link rel="stylesheet" href="code-mirror/codemirror.css" type="text/css" />
+        <link rel="stylesheet" href="code-mirror/monokai.css" />
+        <style>
+            :host {
+                display: inline-block;
+                width: 300px;
+                height: calc( 50vh - 32px);
+                margin-left: 10px;
+            }
+        </style>
+        <div></div>
+    </template>
+    <script>
+        Polymer({
+            is: 'code-editor',
+            properties: {
+                cssCode: {
+                    value: '',
+                    type: String,
+                    notify: true
+                },
+                codeMirror: {
+                    type: Object
+                },
+                intervalObj: {
+                    type: Object,
+                    value: {}
+                },
+                mode: {
+                    type: String,
+                    value: '',
+                    notify: true,
+                    reflectToAttribute: true
+                }
+            },
+            ready: function() {
+                this.intervalObj = setInterval(()=>{
+                    if(CodeMirror) {
+                        this.initCodeMirror();
+                        this.bindCodeMirrorTextChangeEvent();
+                        window.clearInterval(this.intervalObj);
+                    }
+                }, 1000);
+            },
+            initCodeMirror: function() {
+                var cssString = '/* Add Your CSS */\n.ball: {\n\tleft: 10px; \n}',
+                    htmlString = '<!-- Add Your HTML -->\n<div class="ball"></div>';
+
+                this.codeMirror = CodeMirror(this.$$('div'), {
+                    value: this.mode == 'css' ? cssString : htmlString,
+                    mode:  this.mode,
+                    lineWrapping: true,
+                    lineNumbers: true,
+                    theme: 'monokai'
+                });
+            },
+            bindCodeMirrorTextChangeEvent: function() {
+                this.codeMirror.on('change', (event)=>{
+                    this.cssCode = event.doc.getValue();
+                });
+            }
+        });
+    </script>
+</dom-module>
