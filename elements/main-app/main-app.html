@@ -35,10 +35,17 @@
             }
             .svg-keyframe-section {
                 padding: 10px;
-                overflow-y: scroll;
+                overflow-y: hidden;
+                @apply(--layout-vertical);
             }
             .svg-keyframe-collection {
                 @apply(--layout-vertical);
+                overflow-y: scroll;
+                display: block;
+                height: 100vh;
+            }
+            .add-keyframe-section {
+                display: block;
             }
             code-editor:nth-child(2) {
                 border-top: 2px solid #434343;
@@ -46,6 +53,18 @@
             }
             svg-keyframe {
                 margin-bottom: 20px;
+            }
+            .add-keyframe-section paper-button {
+                background: rgba(0,0,0,0.7);
+                color: white;
+                width: 100%;
+                margin: 20px 0 0;
+            }
+            paper-dialog {
+                width: 300px;
+            }
+            paper-input {
+                margin: 20px;
             }
         </style>
         <paper-toolbar>
@@ -68,9 +87,21 @@
                 <div class="svg-keyframe-collection">
                     <svg-keyframe keyframe-name="dropball"></svg-keyframe>
                 </div>
-                <paper-button raised>Add More Keyframes</paper-button>
+                <div class="add-keyframe-section">
+                    <paper-button raised on-click="handleAddSvgKeyframe">Add More Keyframes</paper-button>
+                </div>
             </div>
         </div>
+        <paper-dialog>
+          <h2>New @keyframe</h2>
+          <paper-dialog-scrollable>
+            <paper-input label="@keyframe name" id="newkeyframe"></paper-input>
+          </paper-dialog-scrollable>
+          <div class="buttons">
+            <paper-button dialog-dismiss>Cancel</paper-button>
+            <paper-button dialog-confirm on-click="addSvgKeyframe">Add</paper-button>
+          </div>
+        </paper-dialog>
     </template>
     <script>
         Polymer({
@@ -110,6 +141,15 @@
                     styles: styles,
                     htmls: htmls
                 }
+            },
+            handleAddSvgKeyframe: function() {
+                this.$$('paper-dialog').open();
+            },
+            addSvgKeyframe: function() {
+                var newSvgKeyframe = document.createElement('svg-keyframe');
+                newSvgKeyframe.setAttribute('keyframe-name', this.$.newkeyframe.value);
+                newSvgKeyframe.style.marginBottom = "20px";
+                this.$$('.svg-keyframe-collection').appendChild(newSvgKeyframe);
             }
         });
     </script>
