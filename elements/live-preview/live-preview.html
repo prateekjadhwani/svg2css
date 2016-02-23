@@ -33,6 +33,11 @@
             ready: function() {
                 this._updateIframe();
             },
+            updateLivePreview: function(data) {
+                this.htmls = data.htmls;
+                this.styles = data.styles;
+                this._updateIframe();
+            },
             _updateIframe: function() {
                 var iframe = document.createElement('iframe'),
                     html = this._getStyles() +

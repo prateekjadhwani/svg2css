@@ -199,21 +199,6 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
               property: 'bottom',
               unit: 'px',
               maxValue: '200'
-            }, {
-              path: "M0,100 C50,100 50,100 50,50 C50,-1.73472348e-18 50,0 100,-1.73472348e-18",
-              property: 'width',
-              unit: 'px',
-              maxValue: '200'
-            }, {
-              path: "M0,100.004963 C0,100.004963 25,147.596355 25,100.004961 C25,70.7741867 32.2461944,85.3230873 58.484375,94.8579105 C68.9280825,98.6531013 83.2611815,99.9999999 100,100",
-              property: 'left',
-              unit: 'px',
-              maxValue: '100'
-            }, {
-              path: "M0,100 C0,100 18.1450901,69.0663515 24.0949898,99.9609384 C30.0448895,130.855525 100,100 100,100",
-              property: 'opacity',
-              unit: '',
-              maxValue: '1'
             }
           ],
           observer: '_svgCollectionChanged'
@@ -243,10 +228,10 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
         this._getYCoordinates()
           .then(() => {
             return this._buildCSS();
-          })
-          .then(() => {
-            //console.log(this.builtCss);
           });
+          // .then(() => {
+          //   //console.log(this.builtCss);
+          // });
       },
       _getYCoordinates: function() {
         return new Promise((resolve, reject) => {

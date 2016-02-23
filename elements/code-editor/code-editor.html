@@ -11,6 +11,9 @@
                 height: calc( 50vh - 32px);
                 margin-left: 10px;
             }
+            .CodeMirror {
+                height: calc( 50vh - 32px) !important;
+            }
         </style>
         <div></div>
     </template>
@@ -18,7 +21,7 @@
         Polymer({
             is: 'code-editor',
             properties: {
-                cssCode: {
+                innerCode: {
                     value: '',
                     type: String,
                     notify: true
@@ -47,8 +50,20 @@
                 }, 1000);
             },
             initCodeMirror: function() {
-                var cssString = '/* Add Your CSS */\n.ball: {\n\tleft: 10px; \n}',
+                var cssString = '/* Add Your CSS */\n' +
+                                '.ball {\n' +
+                                '	left: 100px;\n' +
+                                ' 	bottom: 100px;\n' +
+                                '	height: 20px;\n' +
+                                '  	width: 20px;\n' +
+                                '	background: white;\n' +
+                                '  	border-radius: 50%;\n' +
+                                ' 	position: absolute;\n' +
+                                '	animation: dropball 2s infinite;\n' +
+                                '} ',
                     htmlString = '<!-- Add Your HTML -->\n<div class="ball"></div>';
+
+                this.innerCode = this.mode == 'css' ? cssString : htmlString;
 
                 this.codeMirror = CodeMirror(this.$$('div'), {
                     value: this.mode == 'css' ? cssString : htmlString,
@@ -60,7 +75,7 @@
             },
             bindCodeMirrorTextChangeEvent: function() {
                 this.codeMirror.on('change', (event)=>{
-                    this.cssCode = event.doc.getValue();
+                    this.innerCode = event.doc.getValue();
                 });
             }
         });

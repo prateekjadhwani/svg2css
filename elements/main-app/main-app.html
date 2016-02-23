@@ -4,13 +4,20 @@
             :host {
 
             }
+            paper-toolbar {
+                --paper-toolbar-background: rgba(0,0,0,0.7);
+                --paper-toolbar-title: {
+                  margin-left: 0px;
+                  font-size: 15px;
+                }
+              }
             .main-container {
                 @apply(--layout-horizontal);
                 height: calc(100vh - 84px);
             }
             .live-preview-section {
 
-                width: 40%;
+               @apply(--layout-flex);
                 height: calc(100vh - 84px);
             }
             live-preview {
@@ -43,8 +50,10 @@
         </style>
         <paper-toolbar>
             <div class="title">
-              SVG2CSS
+              @SVG2CSS
             </div>
+            <paper-icon-button icon="refresh" on-click="updateLivePreview"></paper-icon-button>
+            <paper-icon-button icon="add">+</paper-icon-button>
         </paper-toolbar>
         <div class="main-container">
             <div class="live-preview-section">
@@ -58,9 +67,8 @@
             <div class="svg-keyframe-section">
                 <div class="svg-keyframe-collection">
                     <svg-keyframe keyframe-name="dropball"></svg-keyframe>
-                    <svg-keyframe keyframe-name="moveout"></svg-keyframe>
                 </div>
-                <paper-button raised>Add More Keyframe</paper-button>
+                <paper-button raised>Add More Keyframes</paper-button>
             </div>
         </div>
     </template>
@@ -68,7 +76,40 @@
         Polymer({
             is: 'main-app',
             ready: function() {
-                console.log('app ready to use');
+                //console.log('app ready to use');
+            },
+            updateLivePreview: function() {
+                var data = this._getUpdatedCodeFromElements();
+                this.$$('live-preview').updateLivePreview(data);
+            },
+            _getUpdatedCodeFromElements: function() {
+                var codeEl = this.$$('.code-editor-section').querySelectorAll('code-editor'),
+                    keyFramesEl = this.$$('.svg-keyframe-collection').querySelectorAll('svg-keyframe'),
+                    styles = '',
+                    htmls  = '';
+
+                // Get codes from editors
+                for(var i=0; i<codeEl.length; i++) {
+                    var mode = codeEl[i].getAttribute('mode'),
+                        code = codeEl[i].innerCode;
+                    if(mode == 'css') {
+                        styles += code;
+                    } else {
+                        htmls += code;
+                    }
+                }
+
+                // Get Codes from svg-keyframes
+                for(var i=0; i<keyFramesEl.length; i++) {
+                    var code = keyFramesEl[i].builtCss;
+
+                    styles += code;
+                }
+
+                return {
+                    styles: styles,
+                    htmls: htmls
+                }
             }
         });
     </script>
