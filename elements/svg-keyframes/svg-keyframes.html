@@ -162,7 +162,6 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
       <div class="add-property-section">
         <paper-button
                  toggles
-                 noink
                  class="display-property-button width-100"
                  on-click="handleDisplayPropertyInput">
           +
@@ -229,13 +228,11 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
           .then(() => {
             return this._buildCSS();
           });
-          // .then(() => {
-          //   //console.log(this.builtCss);
-          // });
       },
       _getYCoordinates: function() {
         return new Promise((resolve, reject) => {
           var pathEl = this.$.svgdisplay.querySelectorAll('.svg-collection path');
+          alert(pathEl.length);
           for (var i = 0; i < pathEl.length; i++) {
             this._buildRawPropertyKeyframe(pathEl[i]);
           }
@@ -314,15 +311,14 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
         var isActive = event.target.active;
         if (isActive) {
           this.$$('.add-property-input-section').style.display = 'block';
-          event.target.innerText = '-'
+          //event.target.innerText = '-'
           return;
         }
         this.$$('.add-property-input-section').style.display = 'none';
-        event.target.innerText = '+'
+        //event.target.innerText = '+'
       },
       handleAddProperty: function(event) {
 
-        //console.log(this.$.min.value);
         var newSvgObj = {
           path: this.$.path.value,
           property: this.$.property.value,
@@ -330,6 +326,7 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
           maxValue: this.$.max.value,
           strokeColor: '#' + this._generateRandomColor('')
         }
+
         this.push('svgCollection', newSvgObj);
 
         this.$.path.value = '';
@@ -339,6 +336,11 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
         this.$.min.value = '';
 
         this.$$('.display-property-button').click();
+
+        this.rawCss = {};
+        this.builtCss = '';
+        Polymer.dom.flush();
+        this._svgCollectionChanged();
       }
     });
 
