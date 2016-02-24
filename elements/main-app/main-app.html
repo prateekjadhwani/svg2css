@@ -8,7 +8,7 @@
                 --paper-toolbar-background: rgba(0,0,0,0.7);
                 --paper-toolbar-title: {
                   margin-left: 0px;
-                  font-size: 15px;
+                  font-size: 20px;
                 }
               }
             .main-container {
@@ -66,11 +66,20 @@
             paper-input {
                 margin: 20px;
             }
+            a {
+                color: white;
+                padding: 8px;
+            }
+            save-to-gist {
+                margin-right: 25px;
+            }
         </style>
         <paper-toolbar>
             <div class="title">
               @SVG2CSS
             </div>
+            <a targe="_blank" href="https://github.com/prateekjadhwani/svg2css/blob/master/TUTORIAL.md"><iron-icon icon="icons:help"></iron-icon></a>
+            <a targe="_blank" href="https://github.com/prateekjadhwani/svg2css/issues/new"><iron-icon icon="icons:bug-report"></iron-icon></a>
             <paper-icon-button icon="refresh" on-click="updateLivePreview"></paper-icon-button>
             <save-to-gist
                 files={{files}}
@@ -78,6 +87,9 @@
                 client_secret="efe69472650c3a0420311b64fcfd4d64982d6fd6"
                 scope="gist"
                 origin="https://svg2css-prateekjadhwani.c9users.io/index.html"></save-to-gist>
+            <iframe src="https://ghbtns.com/github-btn.html?user=prateekjadhwani&repo=svg2css&type=star&count=true&size=large" frameborder="0" scrolling="0" width="140px" height="30px"></iframe>
+            <iframe src="https://ghbtns.com/github-btn.html?user=prateekjadhwani&repo=svg2css&type=fork&count=true&size=large" frameborder="0" scrolling="0" width="140px" height="30px"></iframe>
+
         </paper-toolbar>
         <div class="main-container">
             <div class="live-preview-section">
