@@ -139,8 +139,10 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
               <path d$="{{item.path}}"
                     stroke$="{{item.strokeColor}}"
                     stroke-width="2"
+                    selected10$="{{item.is10}}"
                     selectedprop$="{{item.property}}"
                     selectedunit$="{{item.unit}}"
+                    selectedminvalue$="{{item.minValue}}"
                     selectedmaxvalue$="{{item.maxValue}}" />
             </svg>
           </template>
@@ -196,8 +198,10 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
             {
               path: "M0,100 C2.45434624,97.8269293 16.3464551,108.82637 36.7536484,1.51862764 C57.2239404,55.7168427 71.8396693,1.51862764 73.4575634,0.417637977 C82.7586528,14.6942143 89.6790662,2.18537229 91.391449,0 C95.988064,6.63361647 100,0 100,0",
               property: 'bottom',
+              is10: false,
               unit: 'px',
-              maxValue: '200'
+              maxValue: '200',
+              minValue: '0'
             }
           ],
           observer: '_svgCollectionChanged'
@@ -273,8 +277,10 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
       _buildRawPropertyKeyframe: function(pathEl) {
         var pathLength = pathEl.getTotalLength(),
           increments = pathLength / 100,
+          is10 = pathEl.getAttribute('selected10'),
           property = pathEl.getAttribute('selectedprop'),
           unit = pathEl.getAttribute('selectedunit'),
+          minValue = pathEl.getAttribute('selectedminvalue'),
           maxValue = pathEl.getAttribute('selectedmaxvalue');
 
         for (var start = 0; start < pathLength; start += increments) {
@@ -288,8 +294,15 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
             this.rawCss[Math.round(svgPoint.x) + '%'][property] =
               new Object();
           }
-          this.rawCss[Math.round(svgPoint.x) + '%'][property] =
-            (svgPoint.y * maxValue / 100) + unit;
+
+          if(is10 == "true") {
+            this.rawCss[Math.round(svgPoint.x) + '%'][property] =
+              (svgPoint.y == 1 ? maxValue : minValue) + unit;
+          } else {
+            this.rawCss[Math.round(svgPoint.x) + '%'][property] =
+              ((svgPoint.y * (maxValue-minValue+1) + minValue) / 100) + unit;
+          }
+
         }
       },
       handlePropertyDelete: function(event) {
@@ -322,7 +335,8 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
           path: this.$.path.value,
           property: this.$.property.value,
           unit: this.$.unit.value || '',
-          maxValue: this.$.max.value,
+          minValue: this.$.min.value || '0',
+          maxValue: this.$.max.value || '100',
           strokeColor: '#' + this._generateRandomColor('')
         }
 

@@ -4,8 +4,5 @@ Complex CSS animation have always been a problem when it comes to implementation
 
 ### TODO
 - Add screenshots
-- Create elements to load from and save to gist.github.com
-- Create BounceBall Demo
 - Create TubeLight Demo
-- Make the webapp available on gitpages
 
