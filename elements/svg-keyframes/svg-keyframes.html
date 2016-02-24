@@ -232,7 +232,6 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
       _getYCoordinates: function() {
         return new Promise((resolve, reject) => {
           var pathEl = this.$.svgdisplay.querySelectorAll('.svg-collection path');
-          alert(pathEl.length);
           for (var i = 0; i < pathEl.length; i++) {
             this._buildRawPropertyKeyframe(pathEl[i]);
           }
