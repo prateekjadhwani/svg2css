@@ -277,7 +277,7 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
       _buildRawPropertyKeyframe: function(pathEl) {
         var pathLength = pathEl.getTotalLength(),
           increments = pathLength / 100,
-          is10 = pathEl.getAttribute('selected10'),
+          is10 = pathEl.hasAttribute('selected10'),
           property = pathEl.getAttribute('selectedprop'),
           unit = pathEl.getAttribute('selectedunit'),
           minValue = pathEl.getAttribute('selectedminvalue'),
@@ -295,9 +295,9 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
               new Object();
           }
 
-          if(is10 == "true") {
+          if(is10) {
             this.rawCss[Math.round(svgPoint.x) + '%'][property] =
-              (svgPoint.y == 1 ? maxValue : minValue) + unit;
+              (svgPoint.y > 50 ? maxValue : minValue) + unit;
           } else {
             this.rawCss[Math.round(svgPoint.x) + '%'][property] =
               ((svgPoint.y * (maxValue-minValue+1) + minValue) / 100) + unit;
@@ -330,9 +330,9 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
         //event.target.innerText = '+'
       },
       handleAddProperty: function(event) {
-
         var newSvgObj = {
           path: this.$.path.value,
+          is10: this.$.is10.checked,
           property: this.$.property.value,
           unit: this.$.unit.value || '',
           minValue: this.$.min.value || '0',
