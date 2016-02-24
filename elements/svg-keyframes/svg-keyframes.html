@@ -299,8 +299,10 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
             this.rawCss[Math.round(svgPoint.x) + '%'][property] =
               (svgPoint.y > 50 ? maxValue : minValue) + unit;
           } else {
+            maxValue = Number(maxValue);
+            minValue = Number(minValue);
             this.rawCss[Math.round(svgPoint.x) + '%'][property] =
-              ((svgPoint.y * (maxValue-minValue+1) + minValue) / 100) + unit;
+              ((svgPoint.y * (maxValue-minValue) + minValue) / 100) + unit;
           }
 
         }
