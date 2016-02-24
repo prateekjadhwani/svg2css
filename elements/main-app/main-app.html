@@ -72,7 +72,12 @@
               @SVG2CSS
             </div>
             <paper-icon-button icon="refresh" on-click="updateLivePreview"></paper-icon-button>
-            <paper-icon-button icon="add">+</paper-icon-button>
+            <save-to-gist
+                files={{files}}
+                client_id="15f3d642904a6a95f0f6"
+                client_secret="efe69472650c3a0420311b64fcfd4d64982d6fd6"
+                scope="gist"
+                origin="https://svg2css-prateekjadhwani.c9users.io/index.html"></save-to-gist>
         </paper-toolbar>
         <div class="main-container">
             <div class="live-preview-section">
@@ -106,6 +111,13 @@
     <script>
         Polymer({
             is: 'main-app',
+            properties: {
+                files: {
+                    type: Object,
+                    notify: true,
+                    value: {}
+                }
+            },
             ready: function() {
                 //console.log('app ready to use');
             },
@@ -129,18 +141,28 @@
                         htmls += code;
                     }
                 }
+                this._addToFiles('base.css', styles);
+                this._addToFiles('index.html', htmls);
 
                 // Get Codes from svg-keyframes
+                var keyframeCodes = '';
                 for(var i=0; i<keyFramesEl.length; i++) {
                     var code = keyFramesEl[i].builtCss;
-
-                    styles += code;
+                    keyframeCodes += code;
                 }
+                styles += keyframeCodes;
+                this._addToFiles('animations.css', keyframeCodes);
 
                 return {
                     styles: styles,
                     htmls: htmls
                 }
+            },
+            _addToFiles: function(name, content) {
+                var fileObj = {
+                    'content': content
+                }
+                this.files[name] = fileObj;
             },
             handleAddSvgKeyframe: function() {
                 this.$$('paper-dialog').open();
@@ -154,4 +176,3 @@
         });
     </script>
 </dom-module>
-
