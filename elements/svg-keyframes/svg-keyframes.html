@@ -219,6 +219,26 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
           type: String,
           notify: true,
           reflectToAttribute: true
+        },
+        transformProperties: {
+          type: Array,
+          value: [
+              'translateX',
+              'translateY',
+              'translateZ',
+              'scale',
+              'scaleX',
+              'scaleY',
+              'scaleZ',
+              'rotate',
+              'rotateX',
+              'rotateY',
+              'rotateZ',
+              'skew',
+              'skewX',
+              'skewY',
+              'perspective'
+            ]
         }
       },
       ready: function() {
@@ -283,6 +303,13 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
           minValue = pathEl.getAttribute('selectedminvalue'),
           maxValue = pathEl.getAttribute('selectedmaxvalue');
 
+        var isTransformProperty = false;
+        isTransformProperty = this.transformProperties.find((element, index)=> {
+          if(element == property) {
+            return true;
+          }
+        });
+
         for (var start = 0; start < pathLength; start += increments) {
           var svgPoint = pathEl.getPointAtLength(start);
 
@@ -290,21 +317,34 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
             this.rawCss[Math.round(svgPoint.x) + '%'] =
               new Object();
           }
-          if (!this.rawCss[Math.round(svgPoint.x) + '%'][property]) {
-            this.rawCss[Math.round(svgPoint.x) + '%'][property] =
-              new Object();
-          }
 
-          if(is10) {
-            this.rawCss[Math.round(svgPoint.x) + '%'][property] =
-              (svgPoint.y > 50 ? maxValue : minValue) + unit;
-          } else {
+          if(!!isTransformProperty) {
+            if (!this.rawCss[Math.round(svgPoint.x) + '%']['transform']) {
+              this.rawCss[Math.round(svgPoint.x) + '%']['transform'] = '';
+            }
+
             maxValue = Number(maxValue);
             minValue = Number(minValue);
-            this.rawCss[Math.round(svgPoint.x) + '%'][property] =
-              ((svgPoint.y * (maxValue-minValue) + minValue) / 100) + unit;
-          }
+            this.rawCss[Math.round(svgPoint.x) + '%']['transform'] +=
+              property + '(' +((svgPoint.y * (maxValue-minValue) + minValue) / 100) + unit + ') ';
 
+          }
+          else {
+            if (!this.rawCss[Math.round(svgPoint.x) + '%'][property]) {
+              this.rawCss[Math.round(svgPoint.x) + '%'][property] =
+                new Object();
+            }
+
+            if(is10) {
+              this.rawCss[Math.round(svgPoint.x) + '%'][property] =
+                (svgPoint.y > 50 ? maxValue : minValue) + unit;
+            } else {
+              maxValue = Number(maxValue);
+              minValue = Number(minValue);
+              this.rawCss[Math.round(svgPoint.x) + '%'][property] =
+                ((svgPoint.y * (maxValue-minValue) + minValue) / 100) + unit;
+            }
+          }
         }
       },
       handlePropertyDelete: function(event) {
