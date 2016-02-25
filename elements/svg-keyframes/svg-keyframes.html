@@ -197,7 +197,7 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
           value: [
             {
               path: "M0,100 C2.45434624,97.8269293 16.3464551,108.82637 36.7536484,1.51862764 C57.2239404,55.7168427 71.8396693,1.51862764 73.4575634,0.417637977 C82.7586528,14.6942143 89.6790662,2.18537229 91.391449,0 C95.988064,6.63361647 100,0 100,0",
-              property: 'bottom',
+              property: 'TOP',
               is10: false,
               unit: 'px',
               maxValue: '200',
@@ -303,6 +303,7 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
           minValue = pathEl.getAttribute('selectedminvalue'),
           maxValue = pathEl.getAttribute('selectedmaxvalue');
 
+
         var isTransformProperty = false;
         isTransformProperty = this.transformProperties.find((element, index)=> {
           if(element == property) {
@@ -326,7 +327,7 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
             maxValue = Number(maxValue);
             minValue = Number(minValue);
             this.rawCss[Math.round(svgPoint.x) + '%']['transform'] +=
-              property + '(' +((svgPoint.y * (maxValue-minValue) + minValue) / 100) + unit + ') ';
+              property + '(' +(((100-svgPoint.y) * (maxValue-minValue) + minValue) / 100) + unit + ') ';
 
           }
           else {
@@ -342,7 +343,7 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
               maxValue = Number(maxValue);
               minValue = Number(minValue);
               this.rawCss[Math.round(svgPoint.x) + '%'][property] =
-                ((svgPoint.y * (maxValue-minValue) + minValue) / 100) + unit;
+                (((100-svgPoint.y) * (maxValue-minValue) + minValue) / 100) + unit;
             }
           }
         }
