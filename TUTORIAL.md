@@ -4,6 +4,18 @@
 
 The main purpose of this web-app is to help the user build complex css animations. The user needs to create a keyframe, provide the keyframe with a property, say `left` or `top` or any other css property, and a svg path indicating what should be hapenning with that particular property, along with the unit that the property uses and its min and max value. If the property follows a non-numerical value, the user can choose the `1's and 0's` checkbox and put the `String` values in min and max input field. This way, if the curve is on the top, it will choose the max value and vice versa. I will be showing a demo of `1's and 0's` checkbox in the later section.
 
+
+#### Using the SVG Grid
+
+The SVG grid is like any other graph paper that you guys might have used while studying trigonometry. I build the grid with the same concept. The bottom-left corner of the grid is `0,0` and the grid follows till `100,100` in the positive axis and `100, -50` in the negative axis.
+
+In terms of SVG, a user can build the SVG point at location `M 0 100`. Please refer the following image for the grid.
+
+![Screenshot](assets/svg2css-svggrid.png)
+
+I would suggest using the `-ve` section of the grid only when you need to deal with elastic properties, but other than that, please use the `min` and `max` values.
+
+
 #### transform Properties
 
 In order to add any property in the `keyframe`, the user simply needs to add that property along with its SVG path. In order to add a transform property, the user needs to add the `<transform-function>` instead of the property. For example:
