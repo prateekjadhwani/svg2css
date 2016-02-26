@@ -27,6 +27,11 @@ and open the template in the editor.
     ga('create', 'UA-65947202-2', 'auto');
     ga('send', 'pageview');
 
+    (function(){
+      if(window.location.protocol == "http:") {
+        window.location.protocol = "https:";
+      }
+    })();
   </script>
 </body>
 </html>
