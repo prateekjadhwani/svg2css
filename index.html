@@ -18143,8 +18143,7 @@ element.
                     gistUrl = !!this.gistid ? url + '/' + this.gistid : url;
                 fetch(gistUrl + '?access_token=' + this.token, {
                         body: JSON.stringify(params),
-                        method: 'post',
-                        credentials: true
+                        method: 'post'
                 })
                 .then((res)=>{
                     return res.json();
