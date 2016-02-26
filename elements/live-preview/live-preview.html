@@ -45,7 +45,8 @@
                     this._getBodyHtml() +
                     '</div></body>';
 
-                iframe.src = 'data:text/html;charset=utf-8,' + encodeURI(html);
+                //iframe.src = 'data:text/html;charset=utf-8,' + encodeURI(html);
+                iframe.srcdoc = html;
                 iframe.width = '100%';
                 iframe.height = '100%';
                 iframe.frameBorder = "0";
@@ -55,9 +56,13 @@
             },
             _getStyles: function() {
                return '<style>' +
+                    'html {' +
+                    '    height: 100%;' +
+                    '}' +
                     'body {' +
                     '    background-color: #434343;' +
                     '    background-image:linear-gradient(#434343, #282828);' +
+                    '    height: calc(100vh - 20px);' +
                     '}' +
                     '.grid-background {' +
                     '    background-color: transparent;' +
