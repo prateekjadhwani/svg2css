@@ -125,12 +125,19 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
         margin-top: 40px;
         background: rgba(255,255,255, 0.6);
       }
+      .red-icon{
+        color: red;
+      }
+      paper-dialog p {
+        padding: 20px;
+      }
     </style>
     <paper-material class="element-container" elevation="1">
       <paper-toolbar>
         <div class="title">
           @keyframe <span>{{keyframeName}}</span>
         </div>
+        <paper-icon-button class="red-icon" icon="icons:delete" on-click="handleDeleteKeyframe"></paper-icon-button>
       </paper-toolbar>
       <div class="main-container">
         <div class="svg-display grid-background" id="svgdisplay">
@@ -186,6 +193,16 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
         </div>
       </div>
     </paper-material>
+    <paper-dialog>
+      <h2>Confirm Delete @keyframe</h2>
+      <paper-dialog-scrollable>
+        <p>You are deleting a @keyframe which cannot be recovered once deleted. Are you sure that you want to delete it?</p>
+      </paper-dialog-scrollable>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Wait, Dont Do That!!</paper-button>
+        <paper-button dialog-confirm on-click="_deleteSvgKeyframe">Yes, Delete It!!</paper-button>
+      </div>
+    </paper-dialog>
   </template>
   <script>
     Polymer({
@@ -397,6 +414,12 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
         this.builtCss = '';
         Polymer.dom.flush();
         this._svgCollectionChanged();
+      },
+      handleDeleteKeyframe: function() {
+        this.$$('paper-dialog').open();
+      },
+      _deleteSvgKeyframe: function() {
+        this.remove();
       }
     });
 
