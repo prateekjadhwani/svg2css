@@ -71,6 +71,33 @@ In this demo, the user decides to modify the default code and keyframes by makin
 
 ![Screenshot](assets/svg2css-leftrefresh.gif)
 
+### Light Flicker Demo
+
+This demo shows how you can use the `1's and 0's` checkbox to build a flickering light demo.
+
+##### Step 1
+
+- Build the demo without any animations.
+- Add the `@keyframe` that you want to use.
+ 
+![Screenshot](assets/svg2css-tubelight-start.gif)
+
+##### Step 2
+
+- Decide how you want to apply the animation. I decided to use `background` property to switch on and off the light. So whenever the SVG has a `1`, it will switch on the light and vice versa. I decided to apply the same SVG to `box-shadow` property. This way, it will show the area around the light to brighten whenever the light is on.
+- Add those properties, but also click on the `refresh` icon to see if you broke anything in your demo.
+- Once you have added the property, add the `animation` in your css.
+
+![Screenshot](assets/svg2css-tubelight-animation1.gif) 
+
+##### Step 3
+
+- Play around with the properties until you have what you need. I modified mine a little bit, and this is the final output.
+ 
+![Screenshot](assets/svg2css-tublightoutput.gif)
+
+Here is the [working demo of the tubelight on codepen](http://codepen.io/prateekjadhwani/pen/VawZbd).
+
 ### Saving Your Changes
 
 If you would like to save your changes you can simply click on the save icon on the top, and the app will let you save the css in your [gists](https://gist.github.com/).
