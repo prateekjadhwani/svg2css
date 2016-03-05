@@ -256,6 +256,20 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
               'skewY',
               'perspective'
             ]
+        },
+        filterProperties: {
+          type: Array,
+          value: [
+              'blur',
+              'brightness',
+              'contrast',
+              'grayscale',
+              'hue-rotate',
+              'invert',
+              'opacity',
+              'saturate',
+              'sepia'
+            ]
         }
       },
       ready: function() {
@@ -321,8 +335,16 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
           maxValue = pathEl.getAttribute('selectedmaxvalue');
 
 
-        var isTransformProperty = false;
+        var isTransformProperty = false,
+          isFilterProperty = false;
+
         isTransformProperty = this.transformProperties.find((element, index)=> {
+          if(element == property) {
+            return true;
+          }
+        });
+
+        isFilterProperty = this.filterProperties.find((element, index)=> {
           if(element == property) {
             return true;
           }
@@ -336,16 +358,16 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
               new Object();
           }
 
-          if(!!isTransformProperty) {
-            if (!this.rawCss[Math.round(svgPoint.x) + '%']['transform']) {
-              this.rawCss[Math.round(svgPoint.x) + '%']['transform'] = '';
+          if(!!isTransformProperty || !!isFilterProperty) {
+            var type = !!isTransformProperty ? 'transform' : 'filter'
+            if (!this.rawCss[Math.round(svgPoint.x) + '%'][type]) {
+              this.rawCss[Math.round(svgPoint.x) + '%'][type] = '';
             }
 
             maxValue = Number(maxValue);
             minValue = Number(minValue);
-            this.rawCss[Math.round(svgPoint.x) + '%']['transform'] +=
-              property + '(' +(((100-svgPoint.y) * (maxValue-minValue) + minValue) / 100) + unit + ') ';
-
+            this.rawCss[Math.round(svgPoint.x) + '%'][type] +=
+              property + '(' +((((100-svgPoint.y)/100) * (maxValue-minValue) + minValue)) + unit + ') ';
           }
           else {
             if (!this.rawCss[Math.round(svgPoint.x) + '%'][property]) {
@@ -360,7 +382,7 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
               maxValue = Number(maxValue);
               minValue = Number(minValue);
               this.rawCss[Math.round(svgPoint.x) + '%'][property] =
-                (((100-svgPoint.y) * (maxValue-minValue) + minValue) / 100) + unit;
+                ((((100-svgPoint.y)/100) * (maxValue-minValue) + minValue)) + unit;
             }
           }
         }

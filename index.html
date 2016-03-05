@@ -17691,6 +17691,20 @@ element.
               'skewY',
               'perspective'
             ]
+        },
+        filterProperties: {
+          type: Array,
+          value: [
+              'blur',
+              'brightness',
+              'contrast',
+              'grayscale',
+              'hue-rotate',
+              'invert',
+              'opacity',
+              'saturate',
+              'sepia'
+            ]
         }
       },
       ready: function() {
@@ -17756,8 +17770,16 @@ element.
           maxValue = pathEl.getAttribute('selectedmaxvalue');
 
 
-        var isTransformProperty = false;
+        var isTransformProperty = false,
+          isFilterProperty = false;
+
         isTransformProperty = this.transformProperties.find((element, index)=> {
+          if(element == property) {
+            return true;
+          }
+        });
+
+        isFilterProperty = this.filterProperties.find((element, index)=> {
           if(element == property) {
             return true;
           }
@@ -17771,16 +17793,16 @@ element.
               new Object();
           }
 
-          if(!!isTransformProperty) {
-            if (!this.rawCss[Math.round(svgPoint.x) + '%']['transform']) {
-              this.rawCss[Math.round(svgPoint.x) + '%']['transform'] = '';
+          if(!!isTransformProperty || !!isFilterProperty) {
+            var type = !!isTransformProperty ? 'transform' : 'filter'
+            if (!this.rawCss[Math.round(svgPoint.x) + '%'][type]) {
+              this.rawCss[Math.round(svgPoint.x) + '%'][type] = '';
             }
 
             maxValue = Number(maxValue);
             minValue = Number(minValue);
-            this.rawCss[Math.round(svgPoint.x) + '%']['transform'] +=
-              property + '(' +(((100-svgPoint.y) * (maxValue-minValue) + minValue) / 100) + unit + ') ';
-
+            this.rawCss[Math.round(svgPoint.x) + '%'][type] +=
+              property + '(' +((((100-svgPoint.y)/100) * (maxValue-minValue) + minValue)) + unit + ') ';
           }
           else {
             if (!this.rawCss[Math.round(svgPoint.x) + '%'][property]) {
@@ -17795,7 +17817,7 @@ element.
               maxValue = Number(maxValue);
               minValue = Number(minValue);
               this.rawCss[Math.round(svgPoint.x) + '%'][property] =
-                (((100-svgPoint.y) * (maxValue-minValue) + minValue) / 100) + unit;
+                ((((100-svgPoint.y)/100) * (maxValue-minValue) + minValue)) + unit;
             }
           }
         }
@@ -18037,7 +18059,7 @@ element.
                     '    background-size: 50px 50px;' +
                     '  }' +
                     this.styles +
-                '</style>'
+                '</style>';
             },
             _getBodyHtml: function() {
                 return this.htmls; // add html here
@@ -18141,6 +18163,7 @@ element.
 
                 var url = 'https://api.github.com/gists',
                     gistUrl = !!this.gistid ? url + '/' + this.gistid : url;
+
                 fetch(gistUrl + '?access_token=' + this.token, {
                         body: JSON.stringify(params),
                         method: 'post'

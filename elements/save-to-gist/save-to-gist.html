@@ -104,6 +104,7 @@
 
                 var url = 'https://api.github.com/gists',
                     gistUrl = !!this.gistid ? url + '/' + this.gistid : url;
+
                 fetch(gistUrl + '?access_token=' + this.token, {
                         body: JSON.stringify(params),
                         method: 'post'
