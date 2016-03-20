@@ -25,8 +25,8 @@ Once, you are done fixing/adding things, feel free to create a PR for the `maste
 #### Verifying output on Chrome and Firefox
 
 - Please make sure that the `main.html` file works fine on chrome.
-- Please [Vulcanize](https://github.com/Polymer/vulcanize) the `main.html` file by using the following command `vulcanize main.html > index.html` . This will create a compressed file `out.html`.
-- You will then need to test `out.html` again on chrome and firefox just to make sure that your changes work fine.
+- Please [Vulcanize](https://github.com/Polymer/vulcanize) the `main.html` file by using the following command `vulcanize main.html > index.html` . This will create a compressed file `index.html`.
+- You will then need to test `index.html` again on chrome and firefox just to make sure that your changes work fine.
 
 
 
