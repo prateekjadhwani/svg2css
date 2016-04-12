@@ -258,6 +258,7 @@
                 this.files = detail;
                 this._updateCodeEditors();
                 this._updateSVGKeyframes();
+                this.updateLivePreview();
             },
             _updateCodeEditors: function() {
                 var editorEls = this.$$('.code-editor-section').querySelectorAll('code-editor');
