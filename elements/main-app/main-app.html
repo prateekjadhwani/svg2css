@@ -102,7 +102,9 @@
             </div>
             <div class="svg-keyframe-section">
                 <div class="svg-keyframe-collection">
-                    <svg-keyframe keyframe-name="dropball"></svg-keyframe>
+                    <template is="dom-repeat" items="{{svgKeyframes}}">
+                        <svg-keyframe keyframe-name$="{{item}}" svg-collection$="{{svgCollection}}"></svg-keyframe>
+                    </template>
                 </div>
                 <div class="add-keyframe-section">
                     <paper-button raised on-click="handleAddSvgKeyframe">Add More Keyframes</paper-button>
@@ -128,20 +130,52 @@
                     type: Object,
                     notify: true,
                     value: {}
+                },
+                svgKeyframes: {
+                    type: Array,
+                    notify: true,
+                    value:[
+                        'dropball'
+                    ]
+                },
+                svgCollection : {
+                    type: Array,
+                    notify: true,
+                    value: [
+                        {
+                            path: "M0 00 C2.45434624 2.17 16.3464551 -8.83 36.7536484 98.48 C57.2239404 44.28 71.8396693 98.48 73.4575634 99.58 C82.7586528 85.31 89.6790662 97.81 91.391449 100 C95.988064 93.37 100 100 100 100",
+                            property: 'bottom',
+                            is10: false,
+                            unit: 'px',
+                            maxValue: '200',
+                            minValue: '0'
+                        }
+                    ]
                 }
             },
             ready: function() {
 
             },
+            attached: function() {
+                this.updateLivePreview();
+            },
             updateLivePreview: function() {
+                // parse all SVGs
+                var keyFramesEl = this.$$('.svg-keyframe-collection').querySelectorAll('svg-keyframe');
+                for(var i=0; i<keyFramesEl.length; i++) {
+                    keyFramesEl[i]._svgCollectionChanged();
+                }
+
+                // update live preview
                 var data = this._getUpdatedCodeFromElements();
                 this.$$('live-preview').updateLivePreview(data);
             },
             _getUpdatedCodeFromElements: function() {
                 var codeEl = this.$$('.code-editor-section').querySelectorAll('code-editor'),
                     keyFramesEl = this.$$('.svg-keyframe-collection').querySelectorAll('svg-keyframe'),
-                    styles = '',
-                    htmls  = '';
+                    styles = '',  // To Store the USER CSS
+                    htmls  = '',  // To Store the USER HTML
+                    svgs   = '{';  // To Store the USER SVG Data
 
                 // Get codes from editors
                 for(var i=0; i<codeEl.length; i++) {
@@ -161,9 +195,15 @@
                 for(var i=0; i<keyFramesEl.length; i++) {
                     var code = keyFramesEl[i].builtCss;
                     keyframeCodes += code;
+                    svgs += keyFramesEl[i].builtSVGs;
                 }
+
+                svgs = svgs.substring(0, svgs.length - 1);
+                svgs += '}';
+
                 styles += keyframeCodes;
                 this._addToFiles('animations.css', keyframeCodes);
+                this._addToFiles('svg.json', svgs);
 
                 return {
                     styles: styles,
@@ -180,10 +220,8 @@
                 this.$$('paper-dialog').open();
             },
             addSvgKeyframe: function() {
-                var newSvgKeyframe = document.createElement('svg-keyframe');
-                newSvgKeyframe.setAttribute('keyframe-name', this.$.newkeyframe.value);
-                newSvgKeyframe.style.marginBottom = "20px";
-                this.$$('.svg-keyframe-collection').appendChild(newSvgKeyframe);
+                this.push('svgKeyframes', this.$.newkeyframe.value);
+                Polymer.dom.flush();
             }
         });
     </script>

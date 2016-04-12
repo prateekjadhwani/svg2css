@@ -208,19 +208,16 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
     Polymer({
       is: 'svg-keyframe',
       properties: {
+        keyframeName: {
+          type: String,
+          notify: true,
+          reflectToAttribute: true
+        },
         svgCollection: {
           type: Array,
           notify: true,
-          value: [
-            {
-              path: "M0 00 C2.45434624 2.17 16.3464551 -8.83 36.7536484 98.48 C57.2239404 44.28 71.8396693 98.48 73.4575634 99.58 C82.7586528 85.31 89.6790662 97.81 91.391449 100 C95.988064 93.37 100 100 100 100",
-              property: 'bottom',
-              is10: false,
-              unit: 'px',
-              maxValue: '200',
-              minValue: '0'
-            }
-          ],
+          reflectToAttribute: true,
+          value: [],
           observer: '_svgCollectionChanged'
         },
         rawCss: {
@@ -232,10 +229,9 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
           type: String,
           value: ''
         },
-        keyframeName: {
+        builtSVGs: {
           type: String,
-          notify: true,
-          reflectToAttribute: true
+          value: ''
         },
         transformProperties: {
           type: Array,
@@ -273,16 +269,24 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
         }
       },
       ready: function() {
-        setTimeout(() => {
-          this._svgCollectionChanged();
-        }, 1000);
+
+      },
+      attached: function() {
+        this._svgCollectionChanged();
       },
       _svgCollectionChanged: function() {
         this._buildStrokeColor();
         this._getYCoordinates()
           .then(() => {
             return this._buildCSS();
+          })
+          .then(() => {
+            this.builtSVGs = this._buildSVG();
           });
+      },
+      _buildSVG: function() {
+        var value = JSON.stringify(this.svgCollection);
+        return '\n\"' + this.keyframeName + '\": ' + value + ',';
       },
       _getYCoordinates: function() {
         return new Promise((resolve, reject) => {
@@ -327,12 +331,12 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
       },
       _buildRawPropertyKeyframe: function(pathEl) {
         var pathLength = pathEl.getTotalLength(),
-          increments = pathLength / 100,
-          is10 = pathEl.hasAttribute('selected10'),
-          property = pathEl.getAttribute('selectedprop'),
-          unit = pathEl.getAttribute('selectedunit'),
-          minValue = pathEl.getAttribute('selectedminvalue'),
-          maxValue = pathEl.getAttribute('selectedmaxvalue');
+          increments   = pathLength / 100,
+          is10         = pathEl.hasAttribute('selected10'),
+          property     = pathEl.getAttribute('selectedprop'),
+          unit         = pathEl.getAttribute('selectedunit'),
+          minValue     = pathEl.getAttribute('selectedminvalue'),
+          maxValue     = pathEl.getAttribute('selectedmaxvalue');
 
 
         var isTransformProperty = false,
@@ -392,6 +396,7 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
         .then(()=>{
           this.rawCss = {};
           this.builtCss = '';
+          this.builtSVGs = '';
           this._svgCollectionChanged();
         });
       },
@@ -434,8 +439,10 @@ Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
 
         this.rawCss = {};
         this.builtCss = '';
+        this.builtSVGs = '';
         Polymer.dom.flush();
         this._svgCollectionChanged();
+
       },
       handleDeleteKeyframe: function() {
         this.$$('paper-dialog').open();
