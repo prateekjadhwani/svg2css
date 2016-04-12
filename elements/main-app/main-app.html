@@ -102,8 +102,16 @@
             </div>
             <div class="svg-keyframe-section">
                 <div class="svg-keyframe-collection">
-                    <template is="dom-repeat" items="{{svgKeyframes}}">
-                        <svg-keyframe keyframe-name$="{{item}}" svg-collection$="{{svgCollection}}"></svg-keyframe>
+                    <template is="dom-if" if="{{isLoaded}}">
+                        <gist-loader id="{{gistid}}" on-response="_updateAllSections"></gist-loader>
+                        <template is="dom-repeat" items="{{loadedSVGKeyFrames}}">
+                            <svg-keyframe keyframe-name$="{{item.name}}" svg-collection$="{{item.value}}"></svg-keyframe>
+                        </template>
+                    </template>
+                    <template is="dom-if" if="{{!isLoaded}}">
+                        <template is="dom-repeat" items="{{svgKeyframes}}">
+                            <svg-keyframe keyframe-name$="{{item}}" svg-collection$="{{svgCollection}}"></svg-keyframe>
+                        </template>
                     </template>
                 </div>
                 <div class="add-keyframe-section">
@@ -151,6 +159,21 @@
                             minValue: '0'
                         }
                     ]
+                },
+                gistid: {
+                    type: String,
+                    notify: true,
+                    value: ''
+                },
+                isLoaded : {
+                    type: Boolean,
+                    notify: true,
+                    value: false
+                },
+                loadedSVGKeyFrames : {
+                    type: Array,
+                    value: [],
+                    notify: true
                 }
             },
             ready: function() {
@@ -158,6 +181,7 @@
             },
             attached: function() {
                 this.updateLivePreview();
+                this._checkForLoad();
             },
             updateLivePreview: function() {
                 // parse all SVGs
@@ -222,6 +246,43 @@
             addSvgKeyframe: function() {
                 this.push('svgKeyframes', this.$.newkeyframe.value);
                 Polymer.dom.flush();
+            },
+            _checkForLoad: function() {
+                var id = window.location.hash.substring(1);
+                if(id) {
+                    this.isLoaded = true;
+                    this.gistid = id;
+                }
+            },
+            _updateAllSections: function(e, detail) {
+                this.files = detail;
+                this._updateCodeEditors();
+                this._updateSVGKeyframes();
+            },
+            _updateCodeEditors: function() {
+                var editorEls = this.$$('.code-editor-section').querySelectorAll('code-editor');
+                for( var i = 0; i<editorEls.length; i++) {
+                    var mode = editorEls[i].getAttribute('mode');
+                    switch(mode) {
+                        case 'css' :
+                            editorEls[i].updateCodeMirrorText(this.files['base.css'].content);
+                            break;
+                        case 'xml' :
+                            editorEls[i].updateCodeMirrorText(this.files['index.html'].content);
+                            break;
+                    }
+                }
+            },
+            _updateSVGKeyframes: function() {
+                var parsedSVGKeyFrames = JSON.parse(this.files['svg.json'].content);
+                this.loadedSVGKeyFrames = [];
+                for(var keyframe in parsedSVGKeyFrames) {
+                    var keyFrameObj = {
+                        name: keyframe,
+                        value: parsedSVGKeyFrames[keyframe]
+                    };
+                    this.push('loadedSVGKeyFrames', keyFrameObj);
+                }
             }
         });
     </script>

@@ -1,0 +1,36 @@
+<dom-module id="gist-loader">
+    <template>
+         <iron-ajax
+            url="{{url}}"
+            on-response="_handleGist"
+            method="GET"
+            handle-as="json"
+            withCredentials="true"
+            auto="true"
+            ></iron-ajax>
+    </template>
+    <script>
+        Polymer({
+            is: 'gist-loader',
+            properties: {
+                url: {
+                    type: String,
+                    notify: true,
+                    computed: '_buildURL(id)',
+                },
+                id: {
+                    type: String,
+                    reflectToAttribute: true,
+                    notify: true,
+                    value: ''
+                }
+            },
+            _buildURL: function(id) {
+                return 'https://api.github.com/gists/' + id;
+            },
+            _handleGist: function(e, detail) {
+                this.fire('response', detail.response.files);
+            }
+        });
+    </script>
+</dom-module>
