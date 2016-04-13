@@ -60,9 +60,28 @@
                 width: 100%;
                 margin: 20px 0 0;
             }
-            paper-dialog {
+            #newkeyframedialog {
                 width: 300px;
             }
+            #sharedialog {
+                width: 600px;
+            }
+            #sharedialog > paper-dialog-scrollable  > div {
+                padding: 0 30px;
+                text-align: justify;
+            }
+
+            #sharedialog > paper-dialog-scrollable  > div > ul {
+                list-style: none;
+                padding: 0;
+            }
+
+             #sharedialog > paper-dialog-scrollable  > div > ul > li > paper-input {
+                margin: 0;
+                width: 100%;
+
+            }
+
             paper-input {
                 margin: 20px;
             }
@@ -78,6 +97,7 @@
             <div class="title">
               @SVG2CSS
             </div>
+            <paper-icon-button icon="social:share" on-click="generateShareLink"></paper-icon-button>
             <a target="_blank" href="https://github.com/prateekjadhwani/svg2css/blob/master/TUTORIAL.md"><iron-icon icon="icons:help"></iron-icon></a>
             <a target="_blank" href="https://github.com/prateekjadhwani/svg2css/issues/new"><iron-icon icon="icons:bug-report"></iron-icon></a>
             <paper-icon-button icon="refresh" on-click="updateLivePreview"></paper-icon-button>
@@ -86,6 +106,7 @@
                 client_id="15f3d642904a6a95f0f6"
                 client_secret="efe69472650c3a0420311b64fcfd4d64982d6fd6"
                 scope="gist"
+                on-save="_handleSave"
                 origin="https://svg2css-prateekjadhwani.c9users.io/index.html"></save-to-gist>
             <iframe src="https://ghbtns.com/github-btn.html?user=prateekjadhwani&repo=svg2css&type=star&count=true&size=large" frameborder="0" scrolling="0" width="140px" height="30px"></iframe>
             <iframe src="https://ghbtns.com/github-btn.html?user=prateekjadhwani&repo=svg2css&type=fork&count=true&size=large" frameborder="0" scrolling="0" width="140px" height="30px"></iframe>
@@ -119,7 +140,7 @@
                 </div>
             </div>
         </div>
-        <paper-dialog>
+        <paper-dialog id="newkeyframedialog">
           <h2>New @keyframe</h2>
           <paper-dialog-scrollable>
             <paper-input label="@keyframe name" id="newkeyframe"></paper-input>
@@ -127,6 +148,28 @@
           <div class="buttons">
             <paper-button dialog-dismiss>Cancel</paper-button>
             <paper-button dialog-confirm on-click="addSvgKeyframe">Add</paper-button>
+          </div>
+        </paper-dialog>
+        <paper-dialog id="sharedialog">
+          <h2>Share Your Project</h2>
+          <paper-dialog-scrollable>
+            <div>How does it work?</div>
+            <div>
+                <ul>
+                    <li>
+                        Please make sure that your changes are saved. This will generate the link for sharing.
+                    </li>
+                    <li>
+                        Once, your changes are saved, please copy the link below. If the link below is empty, that means you havent saved your changes even once.
+                    </li>
+                    <li>
+                        <paper-input value="{{shareURL}}"></paper-input>
+                    </li>
+                </ul>
+            </div>
+          </paper-dialog-scrollable>
+          <div class="buttons">
+            <paper-button dialog-dismiss>Close</paper-button>
           </div>
         </paper-dialog>
     </template>
@@ -241,7 +284,7 @@
                 this.files[name] = fileObj;
             },
             handleAddSvgKeyframe: function() {
-                this.$$('paper-dialog').open();
+                this.$.newkeyframedialog.open();
             },
             addSvgKeyframe: function() {
                 this.push('svgKeyframes', this.$.newkeyframe.value);
@@ -252,6 +295,7 @@
                 if(id) {
                     this.isLoaded = true;
                     this.gistid = id;
+                    this.shareURL = window.location;
                 }
             },
             _updateAllSections: function(e, detail) {
@@ -284,6 +328,13 @@
                     };
                     this.push('loadedSVGKeyFrames', keyFrameObj);
                 }
+            },
+            generateShareLink: function() {
+                this.$.sharedialog.open();
+            },
+            _handleSave: function(e, detail) {
+                this.shareURL = 'https://prateekjadhwani.github.io/svg2css/#' + detail;
+                window.location.hash = detail;
             }
         });
     </script>

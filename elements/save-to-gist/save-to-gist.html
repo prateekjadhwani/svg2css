@@ -116,6 +116,7 @@
                     this.gistid = data.id;
                     this.$.gisturl.setAttribute('href', 'https://gist.github.com/' + this.gistid);
                     this.$.gisturl.classList.remove('hide');
+                    this.fire('save', this.gistid);
                 });
 
             },

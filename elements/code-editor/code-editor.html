@@ -41,20 +41,11 @@
                 }
             },
             ready: function() {
-                // this.intervalObj = setInterval(()=>{
-                //     if(CodeMirror) {
-                //         this.initCodeMirror();
-                //         this.bindCodeMirrorTextChangeEvent();
-                //         window.clearInterval(this.intervalObj);
-                //     }
-                // }, 1000);
+
             },
             attached: function() {
-                //if(CodeMirror) {
-                        this.initCodeMirror();
-                        this.bindCodeMirrorTextChangeEvent();
-                  //      window.clearInterval(this.intervalObj);
-                   // }
+                this.initCodeMirror();
+                this.bindCodeMirrorTextChangeEvent();
             },
             initCodeMirror: function() {
                 var cssString = '/* Add Your CSS */\n' +
