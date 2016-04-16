@@ -9,6 +9,7 @@
                 --paper-toolbar-title: {
                   margin-left: 0px;
                   font-size: 20px;
+                  cursor: pointer;
                 }
               }
             .main-container {
@@ -76,18 +77,28 @@
                 padding: 0;
             }
 
-             #sharedialog > paper-dialog-scrollable  > div > ul > li > paper-input {
+            #sharedialog > paper-dialog-scrollable  > div > ul > li > paper-input {
                 margin: 0;
                 width: 100%;
 
+            }
+
+            #versioninfo {
+                max-height: 300px;
+                overflow-y: scroll;
+            }
+            #versioninfo > paper-dialog-scrollable  > p {
+                margin: 0 25px;
+            }
+            #versioninfo > paper-dialog-scrollable  > .release-info {
+                margin: 20px 25px 0 25px;
             }
 
             paper-input {
                 margin: 20px;
             }
             a {
-                color: white;
-                padding: 8px;
+                color: #f92672;
             }
             save-to-gist {
                 margin-right: 25px;
@@ -95,11 +106,10 @@
         </style>
         <paper-toolbar>
             <div class="title">
-              @SVG2CSS
+                #SVG2CSS
             </div>
             <paper-icon-button icon="social:share" on-click="generateShareLink"></paper-icon-button>
-            <a target="_blank" href="https://github.com/prateekjadhwani/svg2css/blob/master/TUTORIAL.md"><iron-icon icon="icons:help"></iron-icon></a>
-            <a target="_blank" href="https://github.com/prateekjadhwani/svg2css/issues/new"><iron-icon icon="icons:bug-report"></iron-icon></a>
+            <paper-icon-button icon="icons:help" on-click="_openVersionInfo"></paper-icon-button>
             <paper-icon-button icon="refresh" on-click="updateLivePreview"></paper-icon-button>
             <save-to-gist
                 files={{files}}
@@ -168,9 +178,44 @@
                 </ul>
             </div>
           </paper-dialog-scrollable>
-          <div class="buttons">
-            <paper-button dialog-dismiss>Close</paper-button>
-          </div>
+            <div class="buttons">
+                <paper-button dialog-dismiss>Close</paper-button>
+            </div>
+        </paper-dialog>
+        <paper-dialog id="versioninfo">
+            <h2>About #svg2css</h2>
+            <paper-dialog-scrollable>
+                <p>Version : 0.0.1</p>
+                <p>You can find tutorials <a target="_blank" href="https://github.com/prateekjadhwani/svg2css/blob/master/TUTORIAL.md">here</a>.</p>
+                <p>If you think that there is a bug in this web-app, please let me know <a target="_blank" href="https://github.com/prateekjadhwani/svg2css/issues/new">here</a>.</p>
+                <div class="release-info">
+                    <h3>Release information</h3>
+
+                    <div>
+                        <b>v0.0.1</b>
+                        <ul>
+                            <li>Added a share button which generates a  sharable link</li>
+                            <li>Save button now saves SVG info as well</li>
+                            <li>Sharable link can be used to get the last state of the project from gist</li>
+                            <li>Webapp now auto runs the animation when loaded via sharable link</li>
+                            <li>Updated tutorial</li>
+                        </ul>
+
+                    </div>
+                    <div>
+                        <b>v0.0.0</b>
+                        <ul>
+                            <li>First app release</li>
+                            <li>Saves files to gist</li>
+                            <li>Creates dynamic animations</li>
+                        </ul>
+
+                    </div>
+                </div>
+            </paper-dialog-scrollable>
+            <div class="buttons">
+                <paper-button dialog-dismiss>Close</paper-button>
+            </div>
         </paper-dialog>
     </template>
     <script>
@@ -335,6 +380,9 @@
             _handleSave: function(e, detail) {
                 this.shareURL = 'https://prateekjadhwani.github.io/svg2css/#' + detail;
                 window.location.hash = detail;
+            },
+            _openVersionInfo: function() {
+                this.$.versioninfo.open();
             }
         });
     </script>

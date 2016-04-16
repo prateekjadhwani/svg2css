@@ -30,7 +30,7 @@ If you would like to save your changes you can simply click on the save icon on 
 
 ##Sharing a project
 
-As of version 0.1 You can share your project with your friends or colleagues. All you need to do is click on the `save` icon to Save your files on `gist`. Then click on the `share` icon to get a sharable link. You can then share this link with anyone.
+As of version 0.0.1 You can share your project with your friends or colleagues. All you need to do is click on the `save` icon to Save your files on `gist`. Then click on the `share` icon to get a sharable link. You can then share this link with anyone.
 
 
 ##Loading a Sharared project
