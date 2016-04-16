@@ -2,6 +2,22 @@
 
 Complex CSS animation have always been a problem when it comes to implementation. It is really difficult for a programmar to create all the `@keyframes` related to a particular animation manually, and it is even more difficult to create `@keyframes` that use multiple `properties`. This *open source web app* solves the problem of complex css animations by providing very simple and easy to use user interface. The user/programmar simply needs to know how the animation should work.
 
+## Version Info
+
+#### v0.0.1
+
+- Added a share button which generates a  sharable link
+- Save button now saves SVG info as well
+- Sharable link can be used to get the last state of the project from gist
+- Webapp now auto runs the animation when loaded via sharable link
+- Updated tutorial
+
+#### v0.0.0
+
+- First app release
+- Saves files to gist
+
+
 ## Development
 
 First of all **thankyou** for even thinking about contributing to this project. This project needs to be developed for both Chrome and Firefox. So here are the steps to start the development.
@@ -27,7 +43,6 @@ Once, you are done fixing/adding things, feel free to create a PR for the `maste
 - Please make sure that the `main.html` file works fine on chrome.
 - Please [Vulcanize](https://github.com/Polymer/vulcanize) the `main.html` file by using the following command `vulcanize main.html > index.html` . This will create a compressed file `index.html`.
 - You will then need to test `index.html` again on chrome and firefox just to make sure that your changes work fine.
-
 
 
 ## Credits
