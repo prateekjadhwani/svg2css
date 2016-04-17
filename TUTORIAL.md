@@ -32,10 +32,14 @@ If you would like to save your changes you can simply click on the save icon on 
 
 As of version 0.0.1 You can share your project with your friends or colleagues. All you need to do is click on the `save` icon to Save your files on `gist`. Then click on the `share` icon to get a sharable link. You can then share this link with anyone.
 
+![Screenshot](assets/donkeykong-share.gif)
+
+Want to see the **donkey-kong stage project**, click [here](https://prateekjadhwani.github.io/svg2css/#a8dec9040aa6d5c973470b21ce1254bb)
+
 
 ##Loading a Sharared project
 
-You just have to click on the sharable link / open it in a browser. The project is intelligent enough to get the recent shared project.
+You just have to click on the sharable link / open it in a browser. The project is intelligent enough to get the recent shared project. You will need to click on the `refresh` icon to play the animation.
 
 
 ## Demo(s)
