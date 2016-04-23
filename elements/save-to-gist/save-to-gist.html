@@ -162,8 +162,8 @@
             },
             handleCode: function(event) {
                 var code = event.data,
-                    //url = 'https://githubtoken-oodma.rhcloud.com/token.php?code=' + code; // PROD
-                    url = 'https://testsave-oodma.rhcloud.com/token.php?code=' + code; // TEST
+                    url = 'https://githubtoken-oodma.rhcloud.com/token.php?code=' + code; // PROD
+                    //url = 'https://testsave-oodma.rhcloud.com/token.php?code=' + code; // TEST
                 this.$$('#authenticator').setAttribute('url', url);
                 this.$$('#authenticator').generateRequest();
             }
