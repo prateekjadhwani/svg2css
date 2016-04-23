@@ -278,6 +278,16 @@
             ready: function() {
                 this._checkForLoad();
             },
+            attached: function() {
+                this._startSVGParse();
+            },
+            _startSVGParse: function() {
+                // parse all SVGs
+                var keyFramesEl = this.$$('.svg-keyframe-collection').querySelectorAll('svg-keyframe');
+                for(var i=0; i<keyFramesEl.length; i++) {
+                    keyFramesEl[i]._svgCollectionChanged();
+                }
+            },
             _loadLivePreviewWithProject: function(files) {
                 var data = {
                     styles: files['animations.css'].content + files['base.css'].content,
@@ -286,12 +296,7 @@
                 this.$$('live-preview').updateLivePreview(data);
             },
             updateLivePreview: function() {
-                // parse all SVGs
-                var keyFramesEl = this.$$('.svg-keyframe-collection').querySelectorAll('svg-keyframe');
-                for(var i=0; i<keyFramesEl.length; i++) {
-                    keyFramesEl[i]._svgCollectionChanged();
-                }
-
+                this._startSVGParse();
                 // update live preview
                 var data = this._getUpdatedCodeFromElements();
                 this.$$('live-preview').updateLivePreview(data);
