@@ -113,11 +113,22 @@
             <paper-icon-button icon="refresh" on-click="updateLivePreview"></paper-icon-button>
             <save-to-gist
                 files={{files}}
+                client_id="c7bb888364a2074c3030"
+                client_secret="efe69472650c3a0420311b64fcfd4d64982d6fd6"
+                scope="gist"
+                gistid={{gistid}}
+                on-save="_handleSave"
+                origin="https://svg2css-prateekjadhwani.c9users.io/index.html"></save-to-gist>
+            <!-- PROD
+            <save-to-gist
+                files={{files}}
                 client_id="15f3d642904a6a95f0f6"
                 client_secret="efe69472650c3a0420311b64fcfd4d64982d6fd6"
                 scope="gist"
+                gistid={{gistid}}
                 on-save="_handleSave"
                 origin="https://svg2css-prateekjadhwani.c9users.io/index.html"></save-to-gist>
+            -->
             <iframe src="https://ghbtns.com/github-btn.html?user=prateekjadhwani&repo=svg2css&type=star&count=true&size=large" frameborder="0" scrolling="0" width="140px" height="30px"></iframe>
             <iframe src="https://ghbtns.com/github-btn.html?user=prateekjadhwani&repo=svg2css&type=fork&count=true&size=large" frameborder="0" scrolling="0" width="140px" height="30px"></iframe>
 
@@ -265,11 +276,11 @@
                 }
             },
             ready: function() {
-
+                this._checkForLoad();
             },
             attached: function() {
                 this.updateLivePreview();
-                this._checkForLoad();
+
             },
             updateLivePreview: function() {
                 // parse all SVGs

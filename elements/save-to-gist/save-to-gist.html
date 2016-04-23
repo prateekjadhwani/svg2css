@@ -28,10 +28,6 @@
             ></iron-ajax>
         <div class="savebutton" on-click="_authenticateGithub"><paper-icon-button icon="icons:save"></paper-icon-button></div>
         <a target="_blank" class="hide" id="gisturl" href=""><iron-icon icon="icons:launch"></iron-icon></a>
-        <iron-localstorage
-            name="token"
-            value="{{token}}"
-          ></iron-localstorage>
         <paper-dialog>
           <h2>Error</h2>
           <paper-dialog-scrollable>
@@ -56,6 +52,7 @@
                   origin: String,
                   token: {
                       type: String,
+                      value: ''
                   },
                   params: {
                       type: Object,
@@ -63,7 +60,8 @@
                   },
                   gistid: {
                       type: String,
-                      value: ''
+                      value: '',
+                      reflectToAttribute: true
                   },
                   files: {
                       type: Object,
@@ -73,6 +71,14 @@
             },
             ready: function() {
 
+            },
+            attached: function() {
+
+                // Shows the open gist link when loaded from a saved project
+                if(this.gistid) {
+                    this.$.gisturl.setAttribute('href', 'https://gist.github.com/' + this.gistid);
+                    this.$.gisturl.classList.remove('hide');
+                }
             },
             _getQueryVariable: function(variable) {
                var query = window.location.search.substring(1);
@@ -103,22 +109,40 @@
                 }
 
                 var url = 'https://api.github.com/gists',
-                    gistUrl = !!this.gistid ? url + '/' + this.gistid : url;
+                    gistUrl = !!this.gistid ? url + '/' + this.gistid : url,
+                    method = !!this.gistid ? 'PATCH' : 'POST';
 
                 fetch(gistUrl + '?access_token=' + this.token, {
                         body: JSON.stringify(params),
-                        method: 'post'
+                        method: method
                 })
                 .then((res)=>{
-                    return res.json();
+                    if (res.status != 404) {
+                        return res.json();
+                    }
+
+                    return this._forkGist();
                 })
                 .then((data)=> {
                     this.gistid = data.id;
                     this.$.gisturl.setAttribute('href', 'https://gist.github.com/' + this.gistid);
                     this.$.gisturl.classList.remove('hide');
                     this.fire('save', this.gistid);
+                })
+                .catch((e) => {
+                    console.log(e);
                 });
 
+            },
+            _forkGist: function() {
+                var url = 'https://api.github.com/gists/' + this.gistid + '/forks',
+                    method = 'POST';
+                return fetch(url + '?access_token=' + this.token,{
+                            method: method
+                        })
+                        .then((res) => {
+                            return res.json()
+                        });
             },
             _authenticateGithub: function() {
                 if(this.token) {
@@ -138,7 +162,8 @@
             },
             handleCode: function(event) {
                 var code = event.data,
-                    url = 'https://githubtoken-oodma.rhcloud.com/token.php?code=' + code;
+                    //url = 'https://githubtoken-oodma.rhcloud.com/token.php?code=' + code; // PROD
+                    url = 'https://testsave-oodma.rhcloud.com/token.php?code=' + code; // TEST
                 this.$$('#authenticator').setAttribute('url', url);
                 this.$$('#authenticator').generateRequest();
             }
