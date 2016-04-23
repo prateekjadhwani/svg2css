@@ -278,9 +278,12 @@
             ready: function() {
                 this._checkForLoad();
             },
-            attached: function() {
-                this.updateLivePreview();
-
+            _loadLivePreviewWithProject: function(files) {
+                var data = {
+                    styles: files['animations.css'].content + files['base.css'].content,
+                    htmls: files['index.html'].content
+                }
+                this.$$('live-preview').updateLivePreview(data);
             },
             updateLivePreview: function() {
                 // parse all SVGs
@@ -358,7 +361,7 @@
                 this.files = detail;
                 this._updateCodeEditors();
                 this._updateSVGKeyframes();
-                this.updateLivePreview();
+                this._loadLivePreviewWithProject(this.files);
             },
             _updateCodeEditors: function() {
                 var editorEls = this.$$('.code-editor-section').querySelectorAll('code-editor');
