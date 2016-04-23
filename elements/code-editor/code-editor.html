@@ -1,0 +1,84 @@
+<link rel="import" href="code-mirror/code-mirror.html" />
+
+<dom-module id="code-editor">
+    <template>
+        <link rel="stylesheet" href="code-mirror/codemirror.css" type="text/css" />
+        <link rel="stylesheet" href="code-mirror/monokai.css" />
+        <style>
+            :host {
+                display: inline-block;
+                width: 300px;
+                height: calc( 50vh - 32px);
+                margin-left: 10px;
+            }
+            .CodeMirror {
+                height: calc( 50vh - 32px) !important;
+            }
+        </style>
+        <div></div>
+    </template>
+    <script>
+        Polymer({
+            is: 'code-editor',
+            properties: {
+                innerCode: {
+                    value: '',
+                    type: String,
+                    notify: true
+                },
+                codeMirror: {
+                    type: Object
+                },
+                intervalObj: {
+                    type: Object,
+                    value: {}
+                },
+                mode: {
+                    type: String,
+                    value: '',
+                    notify: true,
+                    reflectToAttribute: true
+                }
+            },
+            ready: function() {
+
+            },
+            attached: function() {
+                this.initCodeMirror();
+                this.bindCodeMirrorTextChangeEvent();
+            },
+            initCodeMirror: function() {
+                var cssString = '/* Add Your CSS */\n' +
+                                '.ball {\n' +
+                                '	left: 100px;\n' +
+                                ' 	bottom: 100px;\n' +
+                                '	height: 20px;\n' +
+                                '  	width: 20px;\n' +
+                                '	background: white;\n' +
+                                '  	border-radius: 50%;\n' +
+                                ' 	position: absolute;\n' +
+                                '	animation: dropball 2s infinite;\n' +
+                                '} ',
+                    htmlString = '<!-- Add Your HTML -->\n<div class="ball"></div>';
+
+                this.innerCode = this.mode == 'css' ? cssString : htmlString;
+
+                this.codeMirror = CodeMirror(this.$$('div'), {
+                    value: this.mode == 'css' ? cssString : htmlString,
+                    mode:  this.mode,
+                    lineWrapping: true,
+                    lineNumbers: true,
+                    theme: 'monokai'
+                });
+            },
+            bindCodeMirrorTextChangeEvent: function() {
+                this.codeMirror.on('change', (event)=>{
+                    this.innerCode = event.doc.getValue();
+                });
+            },
+            updateCodeMirrorText: function(txt) {
+                this.codeMirror.doc.setValue(txt);
+            }
+        });
+    </script>
+</dom-module>

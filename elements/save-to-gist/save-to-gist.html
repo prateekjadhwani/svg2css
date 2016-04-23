@@ -1,0 +1,172 @@
+<dom-module id="save-to-gist">
+    <template>
+        <style>
+            :host {
+                width: 70px;
+            }
+            .hide{
+                display: none;
+            }
+            a {
+                color: white;
+                display: inline-block;
+            }
+            .savebutton {
+                display: inline-block;
+            }
+            paper-dialog-scrollable p {
+                padding: 20px;
+            }
+        </style>
+        <iron-ajax
+            id="authenticator"
+            url="https://githubtoken-oodma.rhcloud.com/token.php"
+            on-response="_handleToken"
+            method="GET"
+            handle-as="json"
+            withCredentials="true"
+            ></iron-ajax>
+        <div class="savebutton" on-click="_authenticateGithub"><paper-icon-button icon="icons:save"></paper-icon-button></div>
+        <a target="_blank" class="hide" id="gisturl" href=""><iron-icon icon="icons:launch"></iron-icon></a>
+        <paper-dialog>
+          <h2>Error</h2>
+          <paper-dialog-scrollable>
+            <p>Please review the output of your code by clicking on the refresh icon, then save it.</p>
+          </paper-dialog-scrollable>
+          <div class="buttons">
+            <paper-button dialog-dismiss>I Understand</paper-button>
+          </div>
+        </paper-dialog>
+    </template>
+    <script>
+        Polymer({
+            is: 'save-to-gist',
+            properties: {
+                 client_id: String,
+                 client_secret: String,
+                 redirect_endpoint: {
+                    type: String,
+                    value: ''
+                  },
+                  scope: String,
+                  origin: String,
+                  token: {
+                      type: String,
+                      value: ''
+                  },
+                  params: {
+                      type: Object,
+                      value: {}
+                  },
+                  gistid: {
+                      type: String,
+                      value: '',
+                      reflectToAttribute: true
+                  },
+                  files: {
+                      type: Object,
+                      reflectToAttribute: true,
+                      notify: true
+                  }
+            },
+            ready: function() {
+
+            },
+            attached: function() {
+
+                // Shows the open gist link when loaded from a saved project
+                if(this.gistid) {
+                    this.$.gisturl.setAttribute('href', 'https://gist.github.com/' + this.gistid);
+                    this.$.gisturl.classList.remove('hide');
+                }
+            },
+            _getQueryVariable: function(variable) {
+               var query = window.location.search.substring(1);
+               var vars = query.split("&");
+               for (var i=0;i<vars.length;i++) {
+                       var pair = vars[i].split("=");
+                       if(pair[0] == variable){return pair[1];}
+               }
+               return(false);
+            },
+            _handleToken: function(e) {
+                this.token = e.detail.response;
+                if(this.token) {
+                    this._saveGist();
+                }
+            },
+            _saveGist: function() {
+                var params = {
+                    "description": "SVG2CSS : output files",
+                    "public": true,
+                    "files": this.files
+                }
+
+
+                if(Object.keys(this.files).length == 0) {
+                    this.$$('paper-dialog').open();
+                    return;
+                }
+
+                var url = 'https://api.github.com/gists',
+                    gistUrl = !!this.gistid ? url + '/' + this.gistid : url,
+                    method = !!this.gistid ? 'PATCH' : 'POST';
+
+                fetch(gistUrl + '?access_token=' + this.token, {
+                        body: JSON.stringify(params),
+                        method: method
+                })
+                .then((res)=>{
+                    if (res.status != 404) {
+                        return res.json();
+                    }
+
+                    return this._forkGist();
+                })
+                .then((data)=> {
+                    this.gistid = data.id;
+                    this.$.gisturl.setAttribute('href', 'https://gist.github.com/' + this.gistid);
+                    this.$.gisturl.classList.remove('hide');
+                    this.fire('save', this.gistid);
+                })
+                .catch((e) => {
+                    console.log(e);
+                });
+
+            },
+            _forkGist: function() {
+                var url = 'https://api.github.com/gists/' + this.gistid + '/forks',
+                    method = 'POST';
+                return fetch(url + '?access_token=' + this.token,{
+                            method: method
+                        })
+                        .then((res) => {
+                            return res.json()
+                        });
+            },
+            _authenticateGithub: function() {
+                if(this.token) {
+                    this._saveGist();
+                    return;
+                }
+
+                var location = 'https://github.com/login/oauth/authorize?client_id=' +
+                          this.client_id +
+                          '&scope=' + this.scope;
+
+                window.addEventListener("message", (event)=>{
+                    this.handleCode(event)
+                });
+                window.open(location, '');
+
+            },
+            handleCode: function(event) {
+                var code = event.data,
+                    url = 'https://githubtoken-oodma.rhcloud.com/token.php?code=' + code; // PROD
+                    //url = 'https://testsave-oodma.rhcloud.com/token.php?code=' + code; // TEST
+                this.$$('#authenticator').setAttribute('url', url);
+                this.$$('#authenticator').generateRequest();
+            }
+        })
+    </script>
+</dom-module>

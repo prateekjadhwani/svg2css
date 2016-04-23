@@ -1,0 +1,456 @@
+<!--
+Builds SVGs on a 100x100 rectangle and binds CSS properties to the SVG paths.
+-->
+<dom-module id="svg-keyframe">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+        width: 300px;
+        position: relative;
+        background-color: #434343;
+        background-image:linear-gradient(#434343, #282828);
+
+      }
+      .grid-background{
+        background-color: transparent;
+        background-image:
+          linear-gradient(0deg, transparent 24%,
+            rgba(255, 255, 255, .2) 25%,
+            rgba(255, 255, 255, .2) 26%,
+            transparent 27%,
+            transparent 74%,
+            rgba(255, 255, 255, .2) 75%,
+            rgba(255, 255, 255, .2) 76%,
+            transparent 77%,
+            transparent),
+          linear-gradient(90deg,
+            transparent 24%,
+            rgba(255, 255, 255, .2) 25%,
+            rgba(255, 255, 255, .2) 26%,
+            transparent 27%,
+            transparent 74%,
+            rgba(255, 255, 255, .2) 75%,
+            rgba(255, 255, 255, .2) 76%,
+            transparent 77%,
+            transparent);
+        height:100%;
+        background-size:25px 25px;
+      }
+      .svg-display {
+        position: relative;
+        height: 150px;
+        width: 100px;
+      }
+      .svg-collection {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      .element-container: {
+        width: 400px;
+        display: block;
+      }
+      paper-toolbar {
+        --paper-toolbar-background: rgba(0,0,0,0.3);
+        --paper-toolbar-title: {
+          margin-left: 0px;
+          font-size: 15px;
+        }
+      }
+      .main-container {
+        @apply(--layout-horizontal);
+        @apply(--layout-wrap);
+      }
+      .svg-properties {
+        @apply(--layout-flex);
+        height: 150px;
+        overflow-y: scroll;
+      }
+      .svg-property {
+        display: block;
+        color: aliceblue;
+        text-transform: lowercase;
+        text-align: left;
+        background: rgba(255,255,255, 0.1);
+        padding: 10px;
+        margin: 2px;
+      }
+      .svg-property paper-icon-button {
+        position: absolute;
+        top: 0;
+        right: 5px;
+      }
+      .add-property-section {
+        padding: 10px;
+        background: rgba(255,255,255, 0.6);
+      }
+      .add-property-input {
+        @apply(--layout-horizontal);
+        @apply(--layout-wrap);
+      }
+      .width-50 {
+        width: 45%;
+        margin-right: 10px;
+      }
+      .width-30 {
+        width: 30%;
+        margin-right: 5px;
+      }
+      .width-100 {
+        width: 100%;
+      }
+      paper-checkbox {
+        padding: 30px 0 10px;
+        --paper-checkbox-unchecked-color: #737373;
+        --paper-checkbox-label-color : #737373;
+        --paper-checkbox-checked-color: black;
+      }
+      paper-input {
+        --paper-input-underline-focus: {
+          color: black;
+        }
+      }
+      .display-property-button {
+        padding: 0;
+        text-align: center;
+      }
+      .add-property-input-section {
+        display: none;
+        transition: height 1s;
+        -webkit-transition: height 1s;
+      }
+      .add-property-button {
+        margin-top: 40px;
+        background: rgba(255,255,255, 0.6);
+      }
+      .red-icon{
+        color: red;
+      }
+      paper-dialog p {
+        padding: 20px;
+      }
+    </style>
+    <paper-material class="element-container" elevation="1">
+      <paper-toolbar>
+        <div class="title">
+          @keyframe <span>{{keyframeName}}</span>
+        </div>
+        <paper-icon-button class="red-icon" icon="icons:delete" on-click="handleDeleteKeyframe"></paper-icon-button>
+      </paper-toolbar>
+      <div class="main-container">
+        <div class="svg-display grid-background" id="svgdisplay">
+          <template is="dom-repeat" items="{{svgCollection}}">
+            <svg class="svg-collection" height="100%" width="100%" fill="none">
+              <path d$="{{item.path}}"
+                    stroke$="{{item.strokeColor}}"
+                    stroke-width="2"
+                    selected10$="{{item.is10}}"
+                    selectedprop$="{{item.property}}"
+                    selectedunit$="{{item.unit}}"
+                    selectedminvalue$="{{item.minValue}}"
+                    selectedmaxvalue$="{{item.maxValue}}" />
+            </svg>
+          </template>
+        </div>
+        <div class="svg-properties">
+          <template is="dom-repeat" items="{{svgCollection}}">
+            <paper-material
+                class="svg-property"
+                elevation="1"
+                style$="border-left: 2px solid {{item.strokeColor}};">
+              <span>{{item.property}}</span>
+              <paper-icon-button
+                 icon="icons:clear"
+                 on-click=handlePropertyDelete></paper-icon-button>
+            </paper-material>
+          </template>
+        </div>
+      </div>
+      <div class="add-property-section">
+        <paper-button
+                 toggles
+                 class="display-property-button width-100"
+                 on-click="handleDisplayPropertyInput">
+          +
+        </paper-button>
+        <div class="add-property-input-section">
+          <div class="add-property-input">
+            <paper-input label="SVG path" class="width-100" id="path"></paper-input>
+            <paper-input label="property name" class="width-50" id="property"></paper-input>
+            <paper-checkbox  class="width-50" id="is10">1's and 0's</paper-checkbox>
+            <paper-input label="unit"  class="width-30" id="unit"></paper-input>
+            <paper-input label="min value"  class="width-30" id="min"></paper-input>
+            <paper-input label="max value" class="width-30" id="max"></paper-input>
+            <paper-button
+              raised
+              class="width-100 add-property-button"
+              on-click="handleAddProperty">
+              Add Property
+            </paper-button>
+          </div>
+        </div>
+      </div>
+    </paper-material>
+    <paper-dialog>
+      <h2>Confirm Delete @keyframe</h2>
+      <paper-dialog-scrollable>
+        <p>You are deleting a @keyframe which cannot be recovered once deleted. Are you sure that you want to delete it?</p>
+      </paper-dialog-scrollable>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Wait, Dont Do That!!</paper-button>
+        <paper-button dialog-confirm on-click="_deleteSvgKeyframe">Yes, Delete It!!</paper-button>
+      </div>
+    </paper-dialog>
+  </template>
+  <script>
+    Polymer({
+      is: 'svg-keyframe',
+      properties: {
+        keyframeName: {
+          type: String,
+          notify: true,
+          reflectToAttribute: true
+        },
+        svgCollection: {
+          type: Array,
+          notify: true,
+          reflectToAttribute: true,
+          value: [],
+          observer: '_svgCollectionChanged'
+        },
+        rawCss: {
+          type: Object,
+          notify: true,
+          value: {}
+        },
+        builtCss: {
+          type: String,
+          value: ''
+        },
+        builtSVGs: {
+          type: String,
+          value: ''
+        },
+        transformProperties: {
+          type: Array,
+          value: [
+              'translateX',
+              'translateY',
+              'translateZ',
+              'scale',
+              'scaleX',
+              'scaleY',
+              'scaleZ',
+              'rotate',
+              'rotateX',
+              'rotateY',
+              'rotateZ',
+              'skew',
+              'skewX',
+              'skewY',
+              'perspective'
+            ]
+        },
+        filterProperties: {
+          type: Array,
+          value: [
+              'blur',
+              'brightness',
+              'contrast',
+              'grayscale',
+              'hue-rotate',
+              'invert',
+              'opacity',
+              'saturate',
+              'sepia'
+            ]
+        }
+      },
+      ready: function() {
+
+      },
+      attached: function() {
+        this._svgCollectionChanged();
+      },
+      _svgCollectionChanged: function() {
+        this._buildStrokeColor();
+        this._getYCoordinates()
+          .then(() => {
+            return this._buildCSS();
+          })
+          .then(() => {
+            this.builtSVGs = this._buildSVG();
+          });
+      },
+      _buildSVG: function() {
+        var value = JSON.stringify(this.svgCollection);
+        return '\n\"' + this.keyframeName + '\": ' + value + ',';
+      },
+      _getYCoordinates: function() {
+        return new Promise((resolve, reject) => {
+          var pathEl = this.$.svgdisplay.querySelectorAll('.svg-collection path');
+          for (var i = 0; i < pathEl.length; i++) {
+            this._buildRawPropertyKeyframe(pathEl[i]);
+          }
+          resolve();
+        });
+      },
+      _buildStrokeColor: function() {
+        var total = this.svgCollection.length;
+        for(var i=0; i<total; i++ ) {
+          if(!this.svgCollection[i].strokeColor) {
+            this.svgCollection[i].strokeColor = '#' +
+              this._generateRandomColor('');
+          }
+        }
+      },
+      _generateRandomColor: function(lor) {
+        return (lor +=
+          [3,4,5,6,7,8,9,'a','b','c','d','e','f'][Math.floor(Math.random()*13)])
+          && (lor.length == 6) ?  lor : this._generateRandomColor(lor);
+      },
+      _buildCSS: function() {
+        return new Promise((resolve, reject) => {
+          var css = "@keyframes " + this.keyframeName +
+            ' {\n';
+          for (var percentage in this.rawCss) {
+            css += '\t' + percentage + ' {\n';
+            for (var prop in this.rawCss[percentage]) {
+              css += '\t\t' + prop + ': ' +
+                this.rawCss[percentage][prop] +
+                ';\n'
+            }
+            css += '\t}\n';
+          }
+          css += '}\n';
+          this.builtCss = css;
+          resolve();
+        });
+      },
+      _buildRawPropertyKeyframe: function(pathEl) {
+        var pathLength = pathEl.getTotalLength(),
+          increments   = pathLength / 100,
+          is10         = pathEl.hasAttribute('selected10'),
+          property     = pathEl.getAttribute('selectedprop'),
+          unit         = pathEl.getAttribute('selectedunit'),
+          minValue     = pathEl.getAttribute('selectedminvalue'),
+          maxValue     = pathEl.getAttribute('selectedmaxvalue');
+
+
+        var isTransformProperty = false,
+          isFilterProperty = false;
+
+        isTransformProperty = this.transformProperties.find((element, index)=> {
+          if(element == property) {
+            return true;
+          }
+        });
+
+        isFilterProperty = this.filterProperties.find((element, index)=> {
+          if(element == property) {
+            return true;
+          }
+        });
+
+        for (var start = 0; start < pathLength; start += increments) {
+          var svgPoint = pathEl.getPointAtLength(start);
+
+          if (!this.rawCss[Math.round(svgPoint.x) + '%']) {
+            this.rawCss[Math.round(svgPoint.x) + '%'] =
+              new Object();
+          }
+
+          if(!!isTransformProperty || !!isFilterProperty) {
+            var type = !!isTransformProperty ? 'transform' : 'filter'
+            if (!this.rawCss[Math.round(svgPoint.x) + '%'][type]) {
+              this.rawCss[Math.round(svgPoint.x) + '%'][type] = '';
+            }
+
+            maxValue = Number(maxValue);
+            minValue = Number(minValue);
+            this.rawCss[Math.round(svgPoint.x) + '%'][type] +=
+              property + '(' +((((100-svgPoint.y)/100) * (maxValue-minValue) + minValue)) + unit + ') ';
+          }
+          else {
+            if (!this.rawCss[Math.round(svgPoint.x) + '%'][property]) {
+              this.rawCss[Math.round(svgPoint.x) + '%'][property] =
+                new Object();
+            }
+
+            if(is10) {
+              this.rawCss[Math.round(svgPoint.x) + '%'][property] =
+                (svgPoint.y > 50 ? maxValue : minValue) + unit;
+            } else {
+              maxValue = Number(maxValue);
+              minValue = Number(minValue);
+              this.rawCss[Math.round(svgPoint.x) + '%'][property] =
+                ((((100-svgPoint.y)/100) * (maxValue-minValue) + minValue)) + unit;
+            }
+          }
+        }
+      },
+      handlePropertyDelete: function(event) {
+        this._removeProperty(event.model.index)
+        .then(()=>{
+          this.rawCss = {};
+          this.builtCss = '';
+          this.builtSVGs = '';
+          this._svgCollectionChanged();
+        });
+      },
+      _removeProperty: function(index) {
+        return new Promise((resolve, reject)=>{
+          this.splice('svgCollection', index, 1);
+          resolve();
+        });
+      },
+      handleDisplayPropertyInput: function(event) {
+        var isActive = event.target.active;
+        if (isActive) {
+          this.$$('.add-property-input-section').style.display = 'block';
+          //event.target.innerText = '-'
+          return;
+        }
+        this.$$('.add-property-input-section').style.display = 'none';
+        //event.target.innerText = '+'
+      },
+      handleAddProperty: function(event) {
+        var newSvgObj = {
+          path: this.$.path.value,
+          is10: this.$.is10.checked,
+          property: this.$.property.value,
+          unit: this.$.unit.value || '',
+          minValue: this.$.min.value || '0',
+          maxValue: this.$.max.value || '100',
+          strokeColor: '#' + this._generateRandomColor('')
+        }
+
+        this.push('svgCollection', newSvgObj);
+
+        this.$.path.value = '';
+        this.$.property.value = '';
+        this.$.unit.value = '';
+        this.$.max.value = '';
+        this.$.min.value = '';
+
+        this.$$('.display-property-button').click();
+
+        this.rawCss = {};
+        this.builtCss = '';
+        this.builtSVGs = '';
+        Polymer.dom.flush();
+        this._svgCollectionChanged();
+
+      },
+      handleDeleteKeyframe: function() {
+        this.$$('paper-dialog').open();
+      },
+      _deleteSvgKeyframe: function() {
+        this.remove();
+      }
+    });
+
+  </script>
+</dom-module>

@@ -1,0 +1,17 @@
+==================================
+TODO
+==================================
+
+1. Create Path element
+2. Hanlde errors in file loading via shared link
+3. Handle errors with save like when users decide not to log into github
+
+
+==================================
+COMPLETED
+==================================
+
+1. Added a share button which generates a  sharable link
+2. Save button now saves SVG info as well
+3. Sharable link can be used to get the last state of the project from gist
+4. Webapp now auto runs the animation when loaded via sharable link
