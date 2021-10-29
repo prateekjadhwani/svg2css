@@ -1,12 +1,26 @@
-import React from "react";
+import React, { useContext } from "react";
 import './code-editor.scss';
 import CodeMirror from 'codemirror';
 import 'codemirror/mode/css/css';
 import 'codemirror/mode/xml/xml';
+import { CodeContext } from "../../contexts/CodeContext.jsx";
 
 class CodeEditor extends React.Component {
+    // constructor(props) {
+    //     super(props);
+
+        
+
+    //     this.state = {
+    //         context: this.context,
+    //     };
+    // }
+
+    
+
     componentDidMount() {
-        var cssString = '/* Add Your CSS */\n' +
+        // let {cssString} = this.context;
+        var cssString2 = '/* Add Your CSS */\n' +
                         '.ball {\n' +
                         '	left: 100px;\n' +
                         ' 	bottom: 100px;\n' +
@@ -19,8 +33,10 @@ class CodeEditor extends React.Component {
                         '}',
             htmlString = '<!-- Add Your HTML -->\n<div class="ball"></div>';
 
+            // console.log(cssString2);
+        
         var editor = CodeMirror(document.querySelector('#svg2css__code-editor'),{
-            value: cssString,
+            value: cssString2,
             lineWrapping: true,
             lineNumbers: true,
             mode: "text/x-scss", 
@@ -37,16 +53,20 @@ class CodeEditor extends React.Component {
 
     render() {
         return (
-            <div className="svg2css__code-editor-container">
-                <div className="svg2css__code-editor-wrapper">
-                    <div className="svg2css__code-editor" id="svg2css__code-editor"></div>
+            
+                <div className="svg2css__code-editor-container">
+                    
+                        <div className="svg2css__code-editor-wrapper">
+                            <div className="svg2css__code-editor" id="svg2css__code-editor"></div>
+                        </div>
+                        <div className="svg2css__code-editor-wrapper">
+                            <div className="svg2css__code-editor" id="svg2css__code-editor2"></div>
+                        </div>
+                    
                 </div>
-                <div className="svg2css__code-editor-wrapper">
-                    <div className="svg2css__code-editor" id="svg2css__code-editor2"></div>
-                </div>
-            </div>
         );
     }  
 }
 
+// CodeEditor.contextType = CodeContext;
 export default CodeEditor;
