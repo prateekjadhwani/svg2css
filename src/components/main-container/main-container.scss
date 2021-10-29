@@ -8,14 +8,14 @@
 }
 
 .svg2css__main-container__code-container {
-  width: 40%;
+  width: 50%;
   background-color: var(--space-palette-color-2);;
   position: relative;
 }
 
 .svg2css__main-container__demo-container {
   background-color: var(--space-palette-color-1);
-  width: 100%;
+  width: 50%;
   height: 100%;
 }
 
@@ -51,9 +51,8 @@
   position: absolute;
   width: 50px;
   background-color: var(--space-palette-color-4);
-  border: 5px solid var(--space-palette-color-2);
   top: calc(50% - 100px);
-  left: -25px;
+  left: calc(60% - 25px);
   flex-direction: column;
   display: flex;
   border-radius: 5px;
@@ -74,4 +73,10 @@
   border-radius: 50%;
   border: none;
   cursor: pointer;
+}
+
+.svg2css__main-container__code-editor-container {
+  width: 60%;
+  height: 100%;
+  border-left: 2px solid var(--space-palette-color-4);
 }
