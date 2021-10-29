@@ -1,1 +1,3 @@
-h1{color:red}
+body,html{padding:0;margin:0}
+.svg2css__header{width:100%;margin:0;padding:0;position:sticky;top:0;height:50px;background-color:gray;box-shadow:0px 1px 5px 4px rgba(0,0,0,.2)}.svg2css__header__name{margin:0;padding:0}
+.svg2css__main-container{background-color:transparent;background-image:linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, 0.2) 25%, rgba(255, 255, 255, 0.2) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.2) 75%, rgba(255, 255, 255, 0.2) 76%, transparent 77%, transparent),linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, 0.2) 25%, rgba(255, 255, 255, 0.2) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.2) 75%, rgba(255, 255, 255, 0.2) 76%, transparent 77%, transparent);height:100%;width:100%;background-size:50px 50px}

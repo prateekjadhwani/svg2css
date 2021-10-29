@@ -60,4 +60,10 @@ Once, you are done fixing/adding things, feel free to create a PR for the `maste
 #### Libraries
 
 - Polymer and Polymer Elements
-- Code Mirror
+- [Code Mirror](https://codemirror.net/index.html)
+- [Color Palette](https://lospec.com/palette-list/dreamful-space)
+- [Github Buttons](https://ghbtns.com/)
+
+### Developers
+
+- [Prateek Jadhwani](https://github.com/prateekjadhwani)

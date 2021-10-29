@@ -1,0 +1,77 @@
+@import '../../color.scss';
+
+.svg2css__main-container {
+    
+  height:calc(100vh - 50px); /* 50 px is from the header */
+  display: flex;
+
+}
+
+.svg2css__main-container__code-container {
+  width: 40%;
+  background-color: var(--space-palette-color-2);;
+  position: relative;
+}
+
+.svg2css__main-container__demo-container {
+  background-color: var(--space-palette-color-1);
+  width: 100%;
+  height: 100%;
+}
+
+.svg2css__main-container__demo-container__grid-background {
+  background-color: transparent;
+  background-image:
+    linear-gradient(0deg, transparent 24%,
+      rgba(255, 255, 255, .2) 25%,
+      rgba(255, 255, 255, .2) 26%,
+      transparent 27%,
+      transparent 74%,
+      rgba(255, 255, 255, .2) 75%,
+      rgba(255, 255, 255, .2) 76%,
+      transparent 77%,
+      transparent),
+    linear-gradient(90deg,
+      transparent 24%,
+      rgba(255, 255, 255, .2) 25%,
+      rgba(255, 255, 255, .2) 26%,
+      transparent 27%,
+      transparent 74%,
+      rgba(255, 255, 255, .2) 75%,
+      rgba(255, 255, 255, .2) 76%,
+      transparent 77%,
+      transparent);
+  width: 100%;
+  height: 100%;
+  background-size: 50px 50px;
+}
+
+.svg2css__main-container__code-container__control-buttons-container {
+  height: 200px;
+  position: absolute;
+  width: 50px;
+  background-color: var(--space-palette-color-4);
+  border: 5px solid var(--space-palette-color-2);
+  top: calc(50% - 100px);
+  left: -25px;
+  flex-direction: column;
+  display: flex;
+  border-radius: 5px;
+}
+
+.svg2css__main-container__code-container__control-button-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.svg2css__main-container__code-container__control-button {
+  width: 40px;
+  height: 40px;
+  background-color: var(--space-palette-color-1);
+  color: var(--space-palette-color-3);
+  margin: 5px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}

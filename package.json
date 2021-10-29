@@ -19,6 +19,11 @@
   },
   "homepage": "https://github.com/prateekjadhwani/svg2css#readme",
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.4",
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
+    "@fortawesome/free-regular-svg-icons": "^5.15.4",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/react-fontawesome": "^0.1.15",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
@@ -27,6 +32,7 @@
     "@babel/preset-env": "^7.15.8",
     "@babel/preset-react": "^7.14.5",
     "babel-loader": "^8.2.2",
+    "codemirror": "^5.63.3",
     "css-loader": "^6.4.0",
     "file-loader": "^6.2.0",
     "mini-css-extract-plugin": "^2.4.2",
