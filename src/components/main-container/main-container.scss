@@ -46,35 +46,6 @@
   background-size: 50px 50px;
 }
 
-.svg2css__main-container__code-container__control-buttons-container {
-  height: 200px;
-  position: absolute;
-  width: 50px;
-  background-color: var(--space-palette-color-4);
-  top: calc(50% - 100px);
-  left: calc(60% - 25px);
-  flex-direction: column;
-  display: flex;
-  border-radius: 5px;
-}
-
-.svg2css__main-container__code-container__control-button-container {
-  flex: 1;
-  display: flex;
-  align-items: center;
-}
-
-.svg2css__main-container__code-container__control-button {
-  width: 40px;
-  height: 40px;
-  background-color: var(--space-palette-color-1);
-  color: var(--space-palette-color-3);
-  margin: 5px;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-}
-
 .svg2css__main-container__code-editor-container {
   width: 60%;
   height: 100%;

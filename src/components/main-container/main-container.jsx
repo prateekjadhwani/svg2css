@@ -5,17 +5,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faQuestion, faSave } from '@fortawesome/free-solid-svg-icons';
 import CodeEditor from "../code-editor/code-editor.jsx";
 import CodeContext from "../../contexts/CodeContext.jsx";
+import ControlButtons from "../control-buttons/control-buttons.jsx";
 
 class  MainContainer extends React.Component {
 
     static contextType = CodeContext;
-
-    constructor(props) {
-        super(props);
-        // this.state = {
-        //     msgState: 'defalt'
-        // };
-    }
 
     componentDidMount() {
         const msg = this.context;
@@ -24,40 +18,21 @@ class  MainContainer extends React.Component {
     }
     
     render() {
-        const msg = this.context;
-        console.log(msg);
-        return (
+        const {cssString, htmlString} = this.context;
         
-            
-
-                
+        return (
             <div className="svg2css__main-container">
                 <div className="svg2css__main-container__demo-container">
                     <div className="svg2css__main-container__demo-container__grid-background">
-                    {msg}
+                        <style>{cssString}</style>
+                        <div dangerouslySetInnerHTML={{ __html: htmlString }} />
                     </div>
                 </div>
                 <div className="svg2css__main-container__code-container">
                     <div className="svg2css__main-container__code-editor-container">
                         <CodeEditor  />
                     </div>
-                    <div className="svg2css__main-container__code-container__control-buttons-container">
-                        <div className="svg2css__main-container__code-container__control-button-container">
-                            <button aria-label="play" className="svg2css__main-container__code-container__control-button">
-                                <FontAwesomeIcon icon={faPlay} />
-                            </button>
-                        </div>
-                        <div className="svg2css__main-container__code-container__control-button-container">
-                            <button aria-label="save" className="svg2css__main-container__code-container__control-button">
-                                <FontAwesomeIcon icon={faSave} />
-                            </button>
-                        </div>
-                        <div className="svg2css__main-container__code-container__control-button-container">
-                            <button aria-label="help" className="svg2css__main-container__code-container__control-button">
-                                <FontAwesomeIcon icon={faQuestion} />
-                            </button>
-                        </div>
-                    </div>
+                    <ControlButtons />
                 </div>
             </div>
             

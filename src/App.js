@@ -18,10 +18,10 @@ export function App() {
     '	animation: dropball 2s infinite;\n' +
     '}',
     htmlString = '<!-- Add Your HTML -->\n<div class="ball"></div>';
-    //const {code, setCode} = useState(cssString);
+    
         
     return (
-        <CodeContextProvider value={cssString}>
+        <CodeContextProvider value={{cssString, htmlString}}>
             <div>
                     <Header />
                     <MainContainer />
