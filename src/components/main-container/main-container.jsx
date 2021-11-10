@@ -6,6 +6,7 @@ import { faPlay, faQuestion, faSave } from '@fortawesome/free-solid-svg-icons';
 import CodeEditor from "../code-editor/code-editor.jsx";
 import CodeContext from "../../contexts/CodeContext.jsx";
 import ControlButtons from "../control-buttons/control-buttons.jsx";
+import SVGKeyFrames from "../svg-keyframes/svg-keyframes.jsx";
 
 class  MainContainer extends React.Component {
 
@@ -30,7 +31,10 @@ class  MainContainer extends React.Component {
                 </div>
                 <div className="svg2css__main-container__code-container">
                     <div className="svg2css__main-container__code-editor-container">
-                        <CodeEditor  />
+                        <CodeEditor />
+                    </div>
+                    <div className="svg2css__main-container__svg-keyframes-container">
+                        <SVGKeyFrames />
                     </div>
                     <ControlButtons />
                 </div>

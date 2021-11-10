@@ -26,4 +26,9 @@
     border-radius: 50%;
     border: none;
     cursor: pointer;
+
+    &:focus, &:hover {
+        background-color: var(--space-palette-color-3);
+        color: var(--space-palette-color-1);
+    }
   }

@@ -10,7 +10,9 @@ class  ControlButtons extends React.Component {
         return (
             <div className="svg2css__control-buttons__control-buttons-container">
                 <div className="svg2css__control-buttons__control-button-container">
-                    <button aria-label="play" className="svg2css__control-buttons__control-button" onClick={this.handlePlayButtonClick}>
+                    <button aria-label="play" 
+                        className="svg2css__control-buttons__control-button" 
+                        onClick={this.handlePlayButtonClick}>
                         <FontAwesomeIcon icon={faPlay} />
                     </button>
                 </div>

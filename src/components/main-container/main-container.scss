@@ -11,6 +11,7 @@
   width: 50%;
   background-color: var(--space-palette-color-2);;
   position: relative;
+  display: flex;
 }
 
 .svg2css__main-container__demo-container {
@@ -50,4 +51,9 @@
   width: 60%;
   height: 100%;
   border-left: 2px solid var(--space-palette-color-4);
+}
+
+.svg2css__main-container__svg-keyframes-container {
+  width: 40%;
+  height: 100%;
 }
