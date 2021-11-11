@@ -103,3 +103,45 @@
 .svg2css__svg-keyframe-property__property-name {
     flex: 1;
 }
+
+.svg2css__svg-keyframe-property__property-input-svg-path-container {
+    min-width: 100%;
+}
+
+.svg2css__svg-keyframe-property__property-input-container {
+    display: block;
+    margin: 10px;
+    padding: 10px;
+    background-color: var(--space-palette-color-3);
+}
+
+.svg2css__svg-keyframe-property__property-input-field-container {
+    display: flex;
+}
+
+.svg2css__svg-keyframe-property__property-input-field-label {
+
+}
+
+.svg2css__svg-keyframe-property__property-input-field {
+    height: 45px;
+    width: 100%;;
+    margin: 5px;
+}
+
+.svg2css__svg-keyframe-property__property-input-field-button {
+    height: 45px;
+    width: 100%;;
+    margin: 5px;
+    display: block;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--space-palette-color-4);
+    color: var(--space-palette-color-1);
+    cursor: pointer;
+
+    &:hover, &:focus {
+        background-color: var(--space-palette-color-1);
+        color: var(--space-palette-color-4);
+    }
+}

@@ -54,16 +54,8 @@ class  SVGKeyFrameProperty extends React.Component {
                     </div>
                     {this.renderPropertyList()}
                 </div>
-                <div className="svg2css__svg-keyframe-property__property-input-container">
-
-                </div>
-                <div className="svg2css__svg-keyframe-property__property-on-off-container">
-                    <button
-                        className="svg2css__svg-keyframe-property__on-off-button"
-                        onClick={() => this.handleOnOffButton()}>
-                        {this.renderOnOffButton()}
-                    </button>
-                </div>
+                {this.renderPropertyAdder()}
+                {this.renderOnOffButton()}
             </div>
         )
     }
@@ -89,6 +81,50 @@ class  SVGKeyFrameProperty extends React.Component {
             }
             </div>
         );
+    }
+
+    renderPropertyAdder = () => {
+        if (this.state.isOpen) {
+            return (
+                <div className="svg2css__svg-keyframe-property__property-input-container">
+                    <div className="svg2css__svg-keyframe-property__property-input-svg-path-container svg2css__svg-keyframe-property__property-input-field-container">
+                        <input type="text" 
+                            placeholder="SVG Path"
+                            id="svg2css__svg-keyframe-property__property-input-svg-path"
+                            className="svg2css__svg-keyframe-property__property-input-svg-path
+                            svg2css__svg-keyframe-property__property-input-field" />
+                    </div>
+                    
+                    <div className="svg2css__svg-keyframe-property__property-input-field-container">
+                        <input type="text" className="svg2css__svg-keyframe-property__property-input-field svg2css__svg-keyframe-property__property-input-property-name" />
+                    </div>
+
+                    <div className="svg2css__svg-keyframe-property__property-input-field-container">
+                        <input type="checkbox" className="svg2css__svg-keyframe-property__property-input-field svg2css__svg-keyframe-property__property-input-1-0" />
+                    </div>
+                    
+                    <div className="svg2css__svg-keyframe-property__property-input-field-container">
+                        <input type="text" className="svg2css__svg-keyframe-property__property-input-field svg2css__svg-keyframe-property__property-input-unit" />
+                    </div>
+                    
+                    <div className="svg2css__svg-keyframe-property__property-input-field-container">
+                        <input type="text" className="svg2css__svg-keyframe-property__property-input-field svg2css__svg-keyframe-property__property-input-min-value" />
+                    </div>
+                    
+                    <div className="svg2css__svg-keyframe-property__property-input-field-container">
+                        <input type="text" className="svg2css__svg-keyframe-property__property-input-field svg2css__svg-keyframe-property__property-input-max-value" />
+                    </div>
+
+                    <div className="svg2css__svg-keyframe-property__property-input-field-container">
+                        <button 
+                            className="svg2css__svg-keyframe-property__property-input-field-button"
+                            onClick={() => this.handlePropertyAdd()}>
+                                Add Property
+                        </button>
+                    </div>
+                </div>
+            );
+        }
     }
 
     renderPropertyList = () => {
@@ -118,15 +154,23 @@ class  SVGKeyFrameProperty extends React.Component {
     }
 
     renderOnOffButton = () => {
-        if (this.state.isOpen) {
+        if (!this.state.isOpen) {
             return (
-                <FontAwesomeIcon icon={faMinus} />
-            )
-        } else {
-            return (
-                <FontAwesomeIcon icon={faPlus} />
+                <div className="svg2css__svg-keyframe-property__property-on-off-container">
+                    <button
+                        className="svg2css__svg-keyframe-property__on-off-button"
+                        onClick={() => this.handleOnOffButton()}>
+                        <FontAwesomeIcon icon={faPlus} />
+                    </button>
+                </div>
             )
         }
+    }
+
+    handlePropertyAdd = () => {
+        this.setState({
+            isOpen: false
+        });
     }
 
     handleOnOffButton = () => {
