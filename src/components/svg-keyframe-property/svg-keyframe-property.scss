@@ -1,0 +1,105 @@
+.svg2css__svg-keyframe-property {
+    color: var(--space-palette-color-4);
+    background-color: var(--space-palette-color-1);
+    border-radius: 5px;
+    margin: 5px;
+    padding: 10px;
+    box-sizing: content-box;
+}
+
+.svg2css__svg-keyframe-property__heading-container {
+    display: flex;
+    border-bottom: 1px solid var(--space-palette-color-4);
+    padding-bottom: 10px;
+}
+
+.svg2css__svg-keyframe-property__name {
+    flex: 1;
+}
+
+.svg2css__svg-keyframe-property__delete-button {
+    color: var(--space-palette-color-4);
+    background-color: transparent;
+    cursor: pointer;
+    outline: none;
+    border: none;
+}
+
+.svg2css__svg-keyframe-property__property-svgs {
+    position: relative;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: transparent;
+    background-image:
+    linear-gradient(0deg, transparent 24%,
+        rgba(255, 255, 255, .2) 25%,
+        rgba(255, 255, 255, .2) 26%,
+        transparent 27%,
+        transparent 74%,
+        rgba(255, 255, 255, .2) 75%,
+        rgba(255, 255, 255, .2) 76%,
+        transparent 77%,
+        transparent),
+    linear-gradient(90deg,
+        transparent 24%,
+        rgba(255, 255, 255, .2) 25%,
+        rgba(255, 255, 255, .2) 26%,
+        transparent 27%,
+        transparent 74%,
+        rgba(255, 255, 255, .2) 75%,
+        rgba(255, 255, 255, .2) 76%,
+        transparent 77%,
+        transparent);
+    width: 100px;
+    height: 150px;
+    background-size:25px 25px;
+    border: 1px dotted var(--space-palette-color-4);
+}
+
+.svg2css__svg-keyframe-property__property-on-off-container {
+    height: 45px;
+}
+
+.svg2css__svg-keyframe-property__on-off-button {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--space-palette-color-4);
+    color: var(--space-palette-color-1);
+    cursor: pointer;
+
+    &:hover, &:focus {
+        background-color: var(--space-palette-color-3);
+        color: var(--space-palette-color-4);
+    }
+}
+
+.svg2css__svg-collection {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.svg2css__svg-keyframe-property__property-container {
+    display: flex;
+}
+
+.svg2css__svg-keyframe-property__property-list {
+    flex: 1;
+    margin-top: 5px;
+    overflow-y: scroll;
+}
+
+.svg2css__svg-keyframe-property__property-name-container {
+    display: flex;
+    padding: 5px;
+    border: 1px solid var(--space-palette-color-2);
+    margin: 5px 0 5px 5px;
+    border-radius: 5px;
+}
+
+.svg2css__svg-keyframe-property__property-name {
+    flex: 1;
+}

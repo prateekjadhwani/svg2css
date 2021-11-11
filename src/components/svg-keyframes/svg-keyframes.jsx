@@ -1,9 +1,8 @@
 import React, { useContext } from "react";
 import './svg-keyframes.scss';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlay, faQuestion, faSave } from '@fortawesome/free-solid-svg-icons';
 import CodeContext from "../../contexts/CodeContext.jsx";
+import SVGKeyFrameProperty from "../svg-keyframe-property/svg-keyframe-property.jsx";
 
 class  SVGKeyFrames extends React.Component {
 
@@ -42,8 +41,11 @@ class  SVGKeyFrames extends React.Component {
     renderKeyFramesCollection() {
         return (
             <div>
-                {this.state.keyFrames.map((keyFrame) => {
-                    return <div>{keyFrame.keyFrameName}</div>
+                {this.state.keyFrames.map((keyFrame, index) => {
+                    return <SVGKeyFrameProperty 
+                        key={index}
+                        handleDelete={(e) => this.handleDelete(e)}
+                        keyFrameName={keyFrame.keyFrameName} />
                 })}
             </div>
         );
@@ -77,6 +79,15 @@ class  SVGKeyFrames extends React.Component {
                 </div>
             );
         }
+    }
+
+    handleDelete(keyFrameName) {
+        let updatedKeyFrames = this.state.keyFrames.filter((keyFrame) => {
+                                return keyFrame.keyFrameName != keyFrameName;
+                            });
+        this.setState({
+            keyFrames: updatedKeyFrames
+        });
     }
 
     handleNewKeyframeNameChange(e) {
