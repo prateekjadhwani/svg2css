@@ -18,18 +18,11 @@ class  SVGKeyFrameProperty extends React.Component {
                 maxValue: '200',
                 minValue: '0',
                 strokeColor: '#' + this.generateRandomColor('')
-            },{
-                path: "M100 100 L0 0",
-                property: 'left',
-                is10: false,
-                unit: 'px',
-                maxValue: '100',
-                minValue: '0',
-                strokeColor: '#' + this.generateRandomColor('')
             }
         
             ],
-            isOpen: false
+            isOpen: false,
+            newKeyframeProperty: {}
         };
     }
 
@@ -90,29 +83,56 @@ class  SVGKeyFrameProperty extends React.Component {
                     <div className="svg2css__svg-keyframe-property__property-input-svg-path-container svg2css__svg-keyframe-property__property-input-field-container">
                         <input type="text" 
                             placeholder="SVG Path"
+                            name="path"
+                            onChange={(e) => this.handleNewPropertyAdd(e)}
                             id="svg2css__svg-keyframe-property__property-input-svg-path"
                             className="svg2css__svg-keyframe-property__property-input-svg-path
-                            svg2css__svg-keyframe-property__property-input-field" />
+                                svg2css__svg-keyframe-property__property-input-field" />
                     </div>
                     
                     <div className="svg2css__svg-keyframe-property__property-input-field-container">
-                        <input type="text" className="svg2css__svg-keyframe-property__property-input-field svg2css__svg-keyframe-property__property-input-property-name" />
+                        <input type="text" 
+                            name="property"
+                            onChange={(e) => this.handleNewPropertyAdd(e)}
+                            placeholder="Property Name"
+                            className="svg2css__svg-keyframe-property__property-input-field 
+                                svg2css__svg-keyframe-property__property-input-property-name" />
                     </div>
 
                     <div className="svg2css__svg-keyframe-property__property-input-field-container">
-                        <input type="checkbox" className="svg2css__svg-keyframe-property__property-input-field svg2css__svg-keyframe-property__property-input-1-0" />
+                        <label>Is 1's and 0's</label>
+                        <input type="checkbox" 
+                            name="is10"
+                            onChange={(e) => this.handleNewPropertyAdd(e)}
+                            className="svg2css__svg-keyframe-property__property-input-field 
+                                svg2css__svg-keyframe-property__property-input-1-0" />
                     </div>
                     
                     <div className="svg2css__svg-keyframe-property__property-input-field-container">
-                        <input type="text" className="svg2css__svg-keyframe-property__property-input-field svg2css__svg-keyframe-property__property-input-unit" />
+                        <input type="text" 
+                            name="unit"
+                            onChange={(e) => this.handleNewPropertyAdd(e)}
+                            placeholder="Unit (px / %)"
+                            className="svg2css__svg-keyframe-property__property-input-field 
+                                svg2css__svg-keyframe-property__property-input-unit" />
                     </div>
                     
                     <div className="svg2css__svg-keyframe-property__property-input-field-container">
-                        <input type="text" className="svg2css__svg-keyframe-property__property-input-field svg2css__svg-keyframe-property__property-input-min-value" />
+                        <input type="text" 
+                            placeholder="Min value for the property"
+                            name="minValue"
+                            onChange={(e) => this.handleNewPropertyAdd(e)}
+                            className="svg2css__svg-keyframe-property__property-input-field 
+                                svg2css__svg-keyframe-property__property-input-min-value" />
                     </div>
                     
                     <div className="svg2css__svg-keyframe-property__property-input-field-container">
-                        <input type="text" className="svg2css__svg-keyframe-property__property-input-field svg2css__svg-keyframe-property__property-input-max-value" />
+                        <input type="text" 
+                            placeholder="Max value for the property"
+                            name="maxValue"
+                            onChange={(e) => this.handleNewPropertyAdd(e)}
+                            className="svg2css__svg-keyframe-property__property-input-field 
+                                svg2css__svg-keyframe-property__property-input-max-value" />
                     </div>
 
                     <div className="svg2css__svg-keyframe-property__property-input-field-container">
@@ -167,9 +187,31 @@ class  SVGKeyFrameProperty extends React.Component {
         }
     }
 
-    handlePropertyAdd = () => {
+    handleNewPropertyAdd = (e) => {
+        let newKeyframeProperty = this.state.newKeyframeProperty;
+        newKeyframeProperty[e.target.name] = e.target.value;
+
+        if (e.target.name == 'is10') {
+            newKeyframeProperty[e.target.name] = e.target.value == 'on' ? true : false;
+        }
+
         this.setState({
-            isOpen: false
+            newKeyframeProperty: newKeyframeProperty
+        });
+    }
+
+    handlePropertyAdd = () => {
+        let keyframeProperties = this.state.keyframeProperties;
+
+        let newKeyframeProperty = this.state.newKeyframeProperty;
+        newKeyframeProperty['is10'] = newKeyframeProperty['is10'] == 'on';
+        newKeyframeProperty['strokeColor'] = '#' + this.generateRandomColor('');
+
+        keyframeProperties.push(this.state.newKeyframeProperty);
+
+        this.setState({
+            isOpen: false,
+            keyframeProperties: keyframeProperties
         });
     }
 
@@ -203,3 +245,15 @@ class  SVGKeyFrameProperty extends React.Component {
 }
 
 export default SVGKeyFrameProperty;
+
+/*
+{
+    path: "M100 100 L0 0",
+    property: 'left',
+    is10: false,
+    unit: 'px',
+    maxValue: '100',
+    minValue: '0',
+    strokeColor: '#' + this.generateRandomColor('')
+}
+*/
