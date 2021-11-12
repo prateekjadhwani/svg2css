@@ -1,15 +1,52 @@
 import React, { useContext } from "react";
 import './svg-keyframe-property.scss';
 
+import CodeContext from "../../contexts/CodeContext.jsx";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faPlay, faPlus, faQuestion, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 class  SVGKeyFrameProperty extends React.Component {
 
+    static contextType = CodeContext;
+
     constructor(props) {
         super(props);
 
+        this.rawCss = {};
+        this.transformProperties = [
+            'translateX',
+            'translateY',
+            'translateZ',
+            'scale',
+            'scaleX',
+            'scaleY',
+            'scaleZ',
+            'rotate',
+            'rotateX',
+            'rotateY',
+            'rotateZ',
+            'skew',
+            'skewX',
+            'skewY',
+            'perspective'
+        ];
+        this.filterProperties = [
+            'blur',
+            'brightness',
+            'contrast',
+            'grayscale',
+            'hue-rotate',
+            'invert',
+            'opacity',
+            'saturate',
+            'sepia'
+        ];
+          
+
+        this.svgCollectionContainer = React.createRef();
+
         this.state = {
+            builtCss: '',
             keyframeProperties: [{
                 path: "M0 00 C2.45434624 2.17 16.3464551 -8.83 36.7536484 98.48 C57.2239404 44.28 71.8396693 98.48 73.4575634 99.58 C82.7586528 85.31 89.6790662 97.81 91.391449 100 C95.988064 93.37 100 100 100 100",
                 property: 'bottom',
@@ -24,6 +61,10 @@ class  SVGKeyFrameProperty extends React.Component {
             isOpen: false,
             newKeyframeProperty: {}
         };
+    }
+
+    componentDidMount() {
+        window.addEventListener('UPDATE_CANVAS', () => this.handleUpdate());
     }
 
     render() {
@@ -42,7 +83,8 @@ class  SVGKeyFrameProperty extends React.Component {
                     </div>
                 </div>
                 <div className="svg2css__svg-keyframe-property__property-container">
-                    <div className="svg2css__svg-keyframe-property__property-svgs">
+                    <div className="svg2css__svg-keyframe-property__property-svgs"
+                        ref={this.svgCollectionContainer}>
                         {this.renderSVGCollection()}
                     </div>
                     {this.renderPropertyList()}
@@ -59,7 +101,7 @@ class  SVGKeyFrameProperty extends React.Component {
             { this.state.keyframeProperties.map(keyframeProperty => {
                 return (
                     <svg
-                        key={keyframeProperty.property} 
+                        key={keyframeProperty.property + '-' + Math.random()} 
                         className="svg2css__svg-collection" height="100%" width="100%" fill="none">
                         <path d={keyframeProperty.path}
                             stroke={keyframeProperty.strokeColor}
@@ -100,12 +142,13 @@ class  SVGKeyFrameProperty extends React.Component {
                     </div>
 
                     <div className="svg2css__svg-keyframe-property__property-input-field-container">
-                        <label>Is 1's and 0's</label>
                         <input type="checkbox" 
                             name="is10"
                             onChange={(e) => this.handleNewPropertyAdd(e)}
                             className="svg2css__svg-keyframe-property__property-input-field 
                                 svg2css__svg-keyframe-property__property-input-1-0" />
+                            <label className="svg2css__svg-keyframe-property__property-input-field-label">Is 1's and 0's</label>
+                        
                     </div>
                     
                     <div className="svg2css__svg-keyframe-property__property-input-field-container">
@@ -203,15 +246,126 @@ class  SVGKeyFrameProperty extends React.Component {
     handlePropertyAdd = () => {
         let keyframeProperties = this.state.keyframeProperties;
 
-        let newKeyframeProperty = this.state.newKeyframeProperty;
-        newKeyframeProperty['is10'] = newKeyframeProperty['is10'] == 'on';
-        newKeyframeProperty['strokeColor'] = '#' + this.generateRandomColor('');
+        let newKeyframeProperty = {
+            path: this.state.newKeyframeProperty.path,
+            property: this.state.newKeyframeProperty.property,
+            is10: this.state.newKeyframeProperty['is10'] == 'on',
+            unit: this.state.newKeyframeProperty.unit,
+            maxValue: this.state.newKeyframeProperty.maxValue,
+            minValue: this.state.newKeyframeProperty.minValue,
+            strokeColor: '#' + this.generateRandomColor('')
+        };
 
-        keyframeProperties.push(this.state.newKeyframeProperty);
+       
+
+        keyframeProperties.push(newKeyframeProperty);
 
         this.setState({
             isOpen: false,
             keyframeProperties: keyframeProperties
+        }, () => {
+            this.generateCSS();
+            
+        });
+    }
+
+    generateCSS = () => {
+        this.generateKeyFrames();
+        this.generateBuiltCss();
+    }
+
+    generateKeyFrames = () => {
+        let paths = this.svgCollectionContainer.current.querySelectorAll('path');
+        
+        for (let i=0; i < paths.length; i++) {
+            let pathLength = paths[i].getTotalLength(),
+                increments   = pathLength / 100,
+                is10         = paths[i].hasAttribute('selected10'),
+                property     = paths[i].getAttribute('selectedprop'),
+                unit         = paths[i].getAttribute('selectedunit'),
+                minValue     = paths[i].getAttribute('selectedminvalue'),
+                maxValue     = paths[i].getAttribute('selectedmaxvalue');
+
+            console.log('increments',increments);
+            let isTransformProperty = false,
+                isFilterProperty = false;
+      
+            isTransformProperty = this.transformProperties.find((element, index)=> {
+                if(element == property) {
+                    return true;
+                }
+            });
+      
+            isFilterProperty = this.filterProperties.find((element, index)=> {
+                if(element == property) {
+                    return true;
+                }
+            });
+
+            for (var start = 0; start < pathLength; start += increments) {
+                var svgPoint = paths[i].getPointAtLength(start);
+
+                if (!this.rawCss[Math.round(svgPoint.x) + '%']) {
+                    this.rawCss[Math.round(svgPoint.x) + '%'] =
+                    new Object();
+                }
+
+                if(!!isTransformProperty || !!isFilterProperty) {
+                    var type = !!isTransformProperty ? 'transform' : 'filter'
+                    if (!this.rawCss[Math.round(svgPoint.x) + '%'][type]) {
+                        this.rawCss[Math.round(svgPoint.x) + '%'][type] = '';
+                    }
+
+                    maxValue = Number(maxValue);
+                    minValue = Number(minValue);
+                    this.rawCss[Math.round(svgPoint.x) + '%'][type] +=
+                        property + '(' +((((100-svgPoint.y)/100) * (maxValue-minValue) + minValue)) + unit + ') ';
+                }
+                else {
+                    if (!this.rawCss[Math.round(svgPoint.x) + '%'][property]) {
+                        this.rawCss[Math.round(svgPoint.x) + '%'][property] =
+                        new Object();
+                    }
+
+                    if(is10) {
+                        this.rawCss[Math.round(svgPoint.x) + '%'][property] =
+                        (svgPoint.y > 50 ? maxValue : minValue) + unit;
+                    } else {
+                        maxValue = Number(maxValue);
+                        minValue = Number(minValue);
+                        this.rawCss[Math.round(svgPoint.x) + '%'][property] =
+                            ((((100-svgPoint.y)/100) * (maxValue-minValue) + minValue)) + unit;
+                    }
+                }
+            }
+        }
+    }
+
+    generateBuiltCss = () => {
+        let css = "@keyframes " + this.props.keyFrameName + ' {\n';
+        for (let percentage in this.rawCss) {
+            css += '\t' + percentage + ' {\n';
+            for (let prop in this.rawCss[percentage]) {
+                css += '\t\t' + prop + ': ' +
+                    this.rawCss[percentage][prop] +
+                    ';\n'
+            }
+            css += '\t}\n';
+        }
+        css += '}\n';
+
+        this.setState({
+            builtCss: css
+        }, () => {
+            this.props.updateKeyFrame(this.props.keyFrameName, this.state.keyframeProperties);
+        })
+    }
+
+    handleUpdate = () => {
+        const {setBuiltKeyFrames} = this.context;
+        setBuiltKeyFrames({
+            'keyFrameName': this.props.keyFrameName,
+            'builtCSS': this.state.builtCss
         });
     }
 
@@ -222,7 +376,6 @@ class  SVGKeyFrameProperty extends React.Component {
     }
 
     handlePropertyDelete = (propertyName) => {
-        console.log(propertyName, 'to be deleted');
         let updatedKeyframeProperties = this.state.keyframeProperties.filter((keyframeProperty) => {
             return keyframeProperty.property != propertyName;
         });

@@ -44,6 +44,7 @@ class  SVGKeyFrames extends React.Component {
                 {this.state.keyFrames.map((keyFrame, index) => {
                     return <SVGKeyFrameProperty 
                         key={index}
+                        updateKeyFrame={(name, keyFrameProperties) => this.updateKeyFrame(name, keyFrameProperties)}
                         handleDelete={(e) => this.handleDelete(e)}
                         keyFrameName={keyFrame.keyFrameName} />
                 })}
@@ -120,6 +121,19 @@ class  SVGKeyFrames extends React.Component {
             newKeyframeOpen: false,
             keyFrames: keyFrames,
             newKeyframeName: ''
+        });
+    }
+
+    updateKeyFrame(name, keyFrameProperties) {
+        let keyFrames = this.state.keyFrames.map(keyFrame => {
+            if (keyFrame.keyFrameName == name) {
+                keyFrame['keyFrameProperties'] = keyFrameProperties;
+            }
+
+            return keyFrame;
+        });
+        this.setState({
+            keyFrames: keyFrames
         });
     }
 }

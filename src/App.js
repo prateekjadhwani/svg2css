@@ -17,11 +17,12 @@ export function App() {
     ' 	position: absolute;\n' +
     '	animation: dropball 2s infinite;\n' +
     '}',
-    htmlString = '<!-- Add Your HTML -->\n<div class="ball"></div>';
+    htmlString = '<!-- Add Your HTML -->\n<div class="ball"></div>',
+    builtKeyFrames = [];
     
         
     return (
-        <CodeContextProvider value={{cssString, htmlString}}>
+        <CodeContextProvider value={{cssString, htmlString, builtKeyFrames}}>
             <div>
                     <Header />
                     <MainContainer />

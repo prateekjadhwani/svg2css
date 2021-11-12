@@ -7,7 +7,8 @@ class CodeContextProvider extends Component {
     // Context state
     state = {
       cssString: '',
-      htmlString: ''
+      htmlString: '',
+      builtKeyFrames: []
     }
   
     // Method to update state
@@ -16,21 +17,41 @@ class CodeContextProvider extends Component {
     }
     // Method to update state
     setHtmlString = (htmlString) => {
-        this.setState((prevState) => ({ htmlString }))
+      this.setState((prevState) => ({ htmlString }))
+    }
+
+    // Method to update state
+    setBuiltKeyFrames = (builtKeyFrames) => {
+      let hasOld = false;
+      let newKeyFrames = this.state.builtKeyFrames.map(keyFrames => {
+        if (keyFrames['keyFrameName'] == builtKeyFrames['keyFrameName']) {
+          hasOld = true;
+          keyFrames['builtCSS'] = builtKeyFrames['builtCSS'];
+        }
+        return keyFrames;
+      });
+
+      if (!hasOld) {
+        newKeyFrames.push(builtKeyFrames);
       }
+      builtKeyFrames = newKeyFrames;
+      this.setState((prevState) => ({ builtKeyFrames }))
+    }
   
     render() {
       const { children } = this.props
-      const { cssString, htmlString } = this.state
-      const { setCssString, setHtmlString } = this
+      const { cssString, htmlString, builtKeyFrames } = this.state
+      const { setCssString, setHtmlString, setBuiltKeyFrames } = this
   
       return (
         <CodeContext.Provider
           value={{
             cssString,
             htmlString,
+            builtKeyFrames,
             setCssString,
-            setHtmlString
+            setHtmlString,
+            setBuiltKeyFrames
           }}
         >
           {children}

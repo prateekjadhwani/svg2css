@@ -26,6 +26,7 @@ class  MainContainer extends React.Component {
                 <div className="svg2css__main-container__demo-container">
                     <div className="svg2css__main-container__demo-container__grid-background">
                         <style>{cssString}</style>
+                        {this.renderKeyFrameCss()}
                         <div dangerouslySetInnerHTML={{ __html: htmlString }} />
                     </div>
                 </div>
@@ -41,6 +42,18 @@ class  MainContainer extends React.Component {
             </div>
             
         )
+    }
+
+    renderKeyFrameCss() {
+        const {builtKeyFrames} = this.context;
+
+        return (
+            <style>
+                {builtKeyFrames.map(builtKeyFrame => {
+                    return builtKeyFrame.builtCSS
+                })}
+            </style>
+        );
     }
 }
 
