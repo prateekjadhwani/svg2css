@@ -55,9 +55,7 @@ class  SVGKeyFrameProperty extends React.Component {
                 maxValue: '200',
                 minValue: '0',
                 strokeColor: '#' + this.generateRandomColor('')
-            }
-        
-            ],
+            }],
             isOpen: false,
             newKeyframeProperty: {}
         };
@@ -65,6 +63,7 @@ class  SVGKeyFrameProperty extends React.Component {
 
     componentDidMount() {
         window.addEventListener('UPDATE_CANVAS', () => this.handleUpdate());
+        this.generateCSS();
     }
 
     render() {
@@ -265,11 +264,11 @@ class  SVGKeyFrameProperty extends React.Component {
             keyframeProperties: keyframeProperties
         }, () => {
             this.generateCSS();
-            
         });
     }
 
     generateCSS = () => {
+        this.rawCss = {};
         this.generateKeyFrames();
         this.generateBuiltCss();
     }
@@ -280,13 +279,12 @@ class  SVGKeyFrameProperty extends React.Component {
         for (let i=0; i < paths.length; i++) {
             let pathLength = paths[i].getTotalLength(),
                 increments   = pathLength / 100,
-                is10         = paths[i].hasAttribute('selected10'),
+                is10         = paths[i].hasAttribute('selected10') && paths[i].getAttribute('selected10') == 'true',
                 property     = paths[i].getAttribute('selectedprop'),
                 unit         = paths[i].getAttribute('selectedunit'),
                 minValue     = paths[i].getAttribute('selectedminvalue'),
                 maxValue     = paths[i].getAttribute('selectedmaxvalue');
 
-            console.log('increments',increments);
             let isTransformProperty = false,
                 isFilterProperty = false;
       
@@ -324,7 +322,7 @@ class  SVGKeyFrameProperty extends React.Component {
                 else {
                     if (!this.rawCss[Math.round(svgPoint.x) + '%'][property]) {
                         this.rawCss[Math.round(svgPoint.x) + '%'][property] =
-                        new Object();
+                            new Object();
                     }
 
                     if(is10) {
@@ -382,6 +380,9 @@ class  SVGKeyFrameProperty extends React.Component {
 
         this.setState({
             keyframeProperties: updatedKeyframeProperties
+        }, () => {
+            this.generateCSS();
+            
         });
     }
 

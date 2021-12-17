@@ -17,7 +17,9 @@ class  ControlButtons extends React.Component {
                     </button>
                 </div>
                 <div className="svg2css__control-buttons__control-button-container">
-                    <button aria-label="save" className="svg2css__control-buttons__control-button">
+                    <button aria-label="save" 
+                        className="svg2css__control-buttons__control-button"
+                        onClick={this.handleSaveButtonClick}>
                         <FontAwesomeIcon icon={faSave} />
                     </button>
                 </div>
@@ -32,6 +34,10 @@ class  ControlButtons extends React.Component {
 
     handlePlayButtonClick() {
         window.dispatchEvent(new CustomEvent('UPDATE_CANVAS'));
+    }
+
+    handleSaveButtonClick() {
+        window.dispatchEvent(new CustomEvent('SHOW_CSS_PREVIEW'));
     }
 }
 

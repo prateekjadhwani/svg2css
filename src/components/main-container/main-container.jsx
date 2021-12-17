@@ -7,15 +7,32 @@ import CodeEditor from "../code-editor/code-editor.jsx";
 import CodeContext from "../../contexts/CodeContext.jsx";
 import ControlButtons from "../control-buttons/control-buttons.jsx";
 import SVGKeyFrames from "../svg-keyframes/svg-keyframes.jsx";
+import CSSPreview from "../css-preview/css-preview.jsx";
 
 class  MainContainer extends React.Component {
 
     static contextType = CodeContext;
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            showPreview: false
+        };
+    }
+
     componentDidMount() {
-        const msg = this.context;
-        console.log(msg);
-        
+        window.addEventListener('SHOW_CSS_PREVIEW', () => {
+            this.setState({
+                showPreview: true
+            })
+        });
+
+        window.addEventListener('HIDE_CSS_PREVIEW', () => {
+            this.setState({
+                showPreview: false
+            })
+        });
     }
     
     render() {
@@ -39,9 +56,18 @@ class  MainContainer extends React.Component {
                     </div>
                     <ControlButtons />
                 </div>
+                {this.renderCSSPreview()}
             </div>
             
         )
+    }
+
+    renderCSSPreview() {
+        if (this.state.showPreview) {
+            return (
+                <CSSPreview></CSSPreview>
+            );
+        }
     }
 
     renderKeyFrameCss() {
