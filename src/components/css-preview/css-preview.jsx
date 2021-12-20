@@ -14,14 +14,16 @@ class  CSSPreview extends React.Component {
 
     componentDidMount() {
         const {builtKeyFrames} = this.context;
-        const textToShow = builtKeyFrames.map(builtKeyFrame => {
+        let textToShow = builtKeyFrames.map(builtKeyFrame => {
             return builtKeyFrame.builtCSS
         });
 
-        let preTextToShow = `/* SVG To CSS \n * copy the code and save it in a file \n*/\n`;
+        textToShow = textToShow.join('\n\n');
+        
+        let preTextToShow = `/* SVG To CSS \n** copy the code and save it in a file \n*/\n`;
 
         var editor = CodeMirror(document.querySelector('.svg2css__css-preview_code-container'),{
-            value: preTextToShow + (textToShow[0] || ''),
+            value: preTextToShow + (textToShow || ''),
             lineWrapping: true,
             lineNumbers: true,
             mode: "text/x-scss", 
