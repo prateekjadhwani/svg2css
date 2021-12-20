@@ -1,0 +1,46 @@
+{
+  "name": "svg2css",
+  "version": "1.0.0",
+  "description": "Complex CSS animation have always been a problem when it comes to implementation. It is really difficult for a programmar to create all the `@keyframes` related to a particular animation manually, and it is even more difficult to create `@keyframes` that use multiple `properties`. This *open source web app* solves the problem of complex css animations by providing very simple and easy to use user interface. The user/programmar simply needs to know how the animation should work.",
+  "main": "index.js",
+  "scripts": {
+    "serve": "webpack serve --mode development",
+    "build": "webpack --mode production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prateekjadhwani/svg2css.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/prateekjadhwani/svg2css/issues"
+  },
+  "homepage": "https://github.com/prateekjadhwani/svg2css#readme",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.4",
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
+    "@fortawesome/free-regular-svg-icons": "^5.15.4",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/react-fontawesome": "^0.1.15",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "@babel/preset-react": "^7.14.5",
+    "babel-loader": "^8.2.2",
+    "codemirror": "^5.63.3",
+    "css-loader": "^6.4.0",
+    "file-loader": "^6.2.0",
+    "mini-css-extract-plugin": "^2.4.2",
+    "sass": "^1.42.1",
+    "sass-loader": "^12.1.0",
+    "style-loader": "^3.3.0",
+    "webpack": "^5.58.1",
+    "webpack-cli": "^4.9.0",
+    "webpack-dev-server": "^4.3.1"
+  }
+}

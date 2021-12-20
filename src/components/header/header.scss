@@ -1,0 +1,26 @@
+@import '../../color.scss';
+
+.svg2css__header {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    position: sticky;
+    display: flex;
+    top: 0;
+    height: 50px;
+    z-index: 1;
+    background-color: var(--space-palette-color-4);
+    box-shadow: 0px 1px 5px 4px rgba(0,0,0,0.2);
+}
+
+.svg2css__header__name {
+    margin: 0;
+    flex: 1;
+    padding: 5px 10px 0;
+    color: var(--space-palette-color-1);
+}
+
+.svg2css__header__header-links {
+    display: flex;
+    align-items: center;
+}

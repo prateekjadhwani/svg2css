@@ -24,13 +24,23 @@ First of all **thankyou** for even thinking about contributing to this project. 
 
 #### Workspace Setup
 
-If you have worked on any Polymer Element, the steps are the same. All you need to do is
+Start with installing Node. Once you have done that, please install all the packages using the following command.
 
-- **Fork** the project
-- Install dependencies by using the command `bower install`
-- Run `main.html` file on Chrome
+```shell
+npm i
+```
 
-If you have never worked on Polymer elements, you will need to start with the [Polymer Docs](https://www.polymer-project.org/1.0/docs/start/getting-the-code.html).
+To see the project running on the bowser. (For Development)
+
+```shell
+npm run serve
+```
+
+And to build the final project
+
+```shell
+npm run build
+```
 
 #### Features and Bugfixes
 
@@ -50,4 +60,10 @@ Once, you are done fixing/adding things, feel free to create a PR for the `maste
 #### Libraries
 
 - Polymer and Polymer Elements
-- Code Mirror
+- [Code Mirror](https://codemirror.net/index.html)
+- [Color Palette](https://lospec.com/palette-list/dreamful-space)
+- [Github Buttons](https://ghbtns.com/)
+
+### Developers
+
+- [Prateek Jadhwani](https://github.com/prateekjadhwani)
